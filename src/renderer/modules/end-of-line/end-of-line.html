@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Final de Linha</title>
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <link rel="stylesheet" href="end-of-line.css">
+    <script src="endOfLineModel.js" defer></script>
+    <script src="end-of-line.js" defer></script>
+    <script src="../../js/navigation.js" defer></script>
+</head>
+<body>
+    <header class="top-bar topbar">
+        <div class="identity"><span>PCM · IHM</span><strong>FINAL DE LINHA</strong></div>
+        <div class="connection"><i id="connection-dot" aria-hidden="true"></i><span id="connection-text" role="status">Conectando…</span></div>
+    </header>
+    <main>
+        <div id="result-content" class="result-content">
+            <section id="result-banner" class="result-banner waiting-result">
+                <div><span id="result-context">RESULTADO DA BANDEJA</span><h1 id="result-title">AGUARDANDO BANDEJA</h1></div>
+                <div class="completion"><span>Saída da linha</span><strong id="completed-at">—</strong></div>
+            </section>
+            <section class="tray-summary">
+                <article class="serial-card"><span>QR CODE DA BANDEJA</span><strong id="serial-number">—</strong><small id="entry-sequence">—</small></article>
+                <article><span>Posições</span><strong id="position-total">20</strong></article>
+                <article class="approved"><span>Aprovadas</span><strong id="position-approved">—</strong></article>
+                <article class="rejected"><span>Reprovadas</span><strong id="position-rejected">—</strong></article>
+                <article class="indeterminate"><span>Sem resultado</span><strong id="position-indeterminate">—</strong></article>
+            </section>
+            <section id="failure-panel" class="failure-panel" hidden>
+                <strong>Falha identificada em:</strong><span id="failed-machines">—</span>
+            </section>
+            <section class="positions-panel">
+                <div class="section-heading"><div><span>MAPA DA BANDEJA · 20 POSIÇÕES</span><h2>Status por posição</h2></div><span id="position-note">Aguardando saída da última máquina</span></div>
+                <div id="positions" class="positions"></div>
+            </section>
+            <section class="recent-panel">
+                <div class="section-heading"><div><span>HISTÓRICO IMEDIATO</span><h2>Últimas saídas</h2></div></div>
+                <div id="recent" class="recent"><p class="recent-empty">Nenhuma bandeja concluída nesta sessão.</p></div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

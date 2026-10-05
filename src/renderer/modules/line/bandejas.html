@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Gerenciamento de bandejas</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/ihm.css">
+    <link rel="stylesheet" href="line.css">
+    <link rel="stylesheet" href="bandejas.css">
+    <script src="bandejas.js" defer></script>
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="../../js/navigation.js" defer></script>
+</head>
+<body>
+    <header class="top-bar">
+        <h1 class="screen-title">PCM - GERENCIAMENTO DE BANDEJAS</h1>
+        <div class="connection"><span id="connection-dot" class="dot"></span><span id="sync-status" role="status">Carregando bandejas…</span>
+        </div>
+    </header>
+
+    <main class="tray-management-main">
+        <div id="tray-message" class="notice" role="status" aria-live="polite" hidden></div>
+        <section class="management-summary" aria-label="Resumo das bandejas">
+            <article><span>Em andamento</span><strong id="count-progress">—</strong><small>na linha ou nas filas</small></article>
+            <article><span>Retiradas</span><strong id="count-removed">—</strong><small>encerradas manualmente</small></article>
+            <article><span>Quarentena</span><strong id="count-quarantined">—</strong><small>separadas para análise</small></article>
+            <article><span>Acesso</span><strong id="admin-state">LEITURA</strong><small id="admin-detail">ADMIN exigido para intervir</small></article>
+        </section>
+
+        <section class="panel tray-list-panel">
+            <div class="section-heading">
+                <div><p class="eyebrow">RASTREABILIDADE OPERACIONAL</p><h2>Bandejas da linha</h2></div>
+                <button id="admin-exit" class="button secondary compact-button" type="button" hidden>SAIR DO ADMIN</button>
+            </div>
+            <div class="tray-filters">
+                <label>Localizar bandeja<input id="tray-search" maxlength="120" autocomplete="off" placeholder="Serial ou sequência"></label>
+                <label>Situação<select id="tray-status"><option value="all">Todas</option><option value="in_progress" selected>Em andamento</option>
+                    <option value="removed">Retiradas</option><option value="quarantined">Quarentena</option><option value="completed">Concluídas</option></select></label>
+                <span id="result-count" class="result-count">—</span>
+            </div>
+            <div class="table-scroll"><table><thead><tr><th>Sequência</th><th>Bandeja</th><th>Situação</th><th>Localização</th>
+                <th>Entrada / encerramento</th><th>Motivo</th><th>Ação</th></tr></thead><tbody id="tray-list"></tbody></table></div>
+        </section>
+    </main>
+
+    <dialog id="intervention-dialog" aria-labelledby="intervention-title">
+        <div class="dialog-heading">
+            <div><p class="eyebrow">INTERVENÇÃO MANUAL AUDITADA</p><h2 id="intervention-title">Gerenciar bandeja</h2></div>
+            <button id="close-intervention" class="button secondary" type="button">VOLTAR</button>
+        </div>
+        <div class="intervention-layout">
+            <section class="intervention-context">
+                <span>Bandeja</span><strong id="selected-serial">—</strong>
+                <dl><div><dt>Sequência</dt><dd id="selected-sequence">—</dd></div><div><dt>Localização</dt><dd id="selected-location">—</dd></div></dl>
+                <p id="physical-warning" class="physical-warning" hidden>Esta bandeja está atribuída a uma estação. Antes de confirmar, retire-a fisicamente e garanta que o mailbox da CLP esteja zerado.</p>
+            </section>
+            <form id="intervention-form" class="intervention-form">
+                <label>Ação<select id="intervention-action" required><option value="quarantine">Colocar em quarentena</option>
+                    <option value="remove">Retirar da linha</option></select></label>
+                <label>Motivo<input id="intervention-reason" minlength="3" maxlength="120" required placeholder="Ex.: bandeja danificada"></label>
+                <label>Observação<textarea id="intervention-notes" maxlength="500" rows="4" placeholder="Detalhes opcionais da ocorrência"></textarea></label>
+                <label id="physical-confirm-row" class="physical-confirm" hidden><input id="physical-confirm" type="checkbox">
+                    Confirmo que a bandeja foi retirada fisicamente e que o mailbox da estação está limpo.</label>
+                <fieldset id="admin-credentials" class="admin-credentials">
+                    <legend>Autorização ADMIN</legend>
+                    <label>Senha ADMIN<input id="admin-password" type="password" maxlength="200" autocomplete="current-password"></label>
+                </fieldset>
+                <div class="intervention-note">O histórico não será excluído. A passagem será encerrada e deixará de compor a fila produtiva e os indicadores de produção concluída.</div>
+                <button id="confirm-intervention" class="button danger" type="submit">CONFIRMAR INTERVENÇÃO</button>
+            </form>
+        </div>
+    </dialog>
+    <footer class="bottom-nav" data-navigation aria-label="Navegação principal"></footer>
+</body>
+</html>

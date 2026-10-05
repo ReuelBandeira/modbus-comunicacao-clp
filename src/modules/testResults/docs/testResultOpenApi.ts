@@ -1,0 +1,15 @@
+const response = (description: string) => ({ description });
+
+export const testResultSchemas = {
+    TestResultPosition: { type: 'object', required: ['position', 'passed', 'result', 'judgment', 'ngStep', 'message'], properties: { position: { type: 'integer', minimum: 1 }, passed: { type: 'boolean' }, result: { type: 'string', enum: ['PASS', 'FAIL'] }, judgment: { type: 'string', nullable: true }, ngStep: { type: 'string', nullable: true }, message: { type: 'string', nullable: true } } },
+    TestResultSourceFile: { type: 'object', required: ['name', 'positionCount'], properties: { name: { type: 'string' }, positionCount: { type: 'integer', minimum: 0 } } },
+    TestResultCycle: { type: 'object', required: ['schemaVersion', 'cycleId', 'model', 'startedAt', 'finishedAt', 'result', 'passed', 'totalPositions', 'passedPositions', 'failedPositions', 'positions', 'sourceFiles'], properties: { schemaVersion: { type: 'integer', enum: [2] }, cycleId: { type: 'string' }, model: { type: 'string' }, startedAt: { type: 'string', format: 'date-time' }, finishedAt: { type: 'string', format: 'date-time' }, result: { type: 'string', enum: ['PASS', 'FAIL'] }, passed: { type: 'boolean' }, totalPositions: { type: 'integer', minimum: 0 }, passedPositions: { type: 'integer', minimum: 0 }, failedPositions: { type: 'integer', minimum: 0 }, positions: { type: 'array', items: { $ref: '#/components/schemas/TestResultPosition' } }, sourceFiles: { type: 'array', items: { $ref: '#/components/schemas/TestResultSourceFile' } } } }
+};
+
+export const testResultPaths = {
+    '/api/test-results': {
+        post: { tags: ['IFTS'], summary: 'Receber resultado IFTS CSV Bridge', security: [{ apiKeyAuth: [] }], parameters: [{ name: 'Idempotency-Key', in: 'header', required: false, schema: { type: 'string' } }], requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/TestResultCycle' } } } }, responses: { '200': response('Ciclo duplicado já confirmado.'), '201': response('Ciclo persistido.'), '400': response('Payload ou idempotência inválida.'), '401': response('API key inválida.'), '413': response('Payload excede 12 MB.'), '415': response('Content-Type inválido.'), '500': response('Falha de persistência.'), '503': response('MongoDB não configurado.') } },
+        get: { tags: ['IFTS'], summary: 'Listar ciclos recentes', parameters: [{ name: 'model', in: 'query', schema: { type: 'string' } }, { name: 'from', in: 'query', schema: { type: 'string', format: 'date-time' } }, { name: 'to', in: 'query', schema: { type: 'string', format: 'date-time' } }, { name: 'limit', in: 'query', schema: { type: 'integer', default: 50, maximum: 500 } }], responses: { '200': response('Resumos dos ciclos.'), '400': response('Filtro inválido.'), '503': response('MongoDB não configurado.') } }
+    },
+    '/api/test-results/{cycleId}': { get: { tags: ['IFTS'], summary: 'Consultar ciclo e posições', parameters: [{ name: 'cycleId', in: 'path', required: true, schema: { type: 'string' } }], responses: { '200': response('Ciclo completo.'), '404': response('Ciclo não encontrado.'), '503': response('MongoDB não configurado.') } } }
+};

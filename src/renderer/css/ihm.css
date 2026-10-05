@@ -1,0 +1,50 @@
+/* Componentes compartilhados pela HOME e pela tela de linha. */
+.top-bar {
+    box-sizing: border-box;
+    height: var(--app-header-height, 70px);
+    min-height: var(--app-header-height, 70px);
+    max-height: var(--app-header-height, 70px);
+    flex: 0 0 var(--app-header-height, 70px);
+    background: #30363b;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    border-bottom: 4px solid #1b1f22;
+    overflow: hidden;
+}
+
+.top-bar h1 {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 24px;
+    margin: 0;
+    font-weight: bold;
+}
+
+.connection {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+}
+
+.connection-dot {
+    width: 18px;
+    height: 18px;
+    background: #1fd655;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #1fd655;
+}
+
+.machine-panel {
+    background: #eeeeee;
+    border: 2px solid #8c8c8c;
+    border-radius: 5px;
+    padding: 20px;
+}
+

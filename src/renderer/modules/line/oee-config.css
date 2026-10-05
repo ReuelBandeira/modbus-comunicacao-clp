@@ -1,0 +1,24 @@
+.oee-config-main { overflow-y: auto; }
+.oee-config-content { display: grid; gap: 18px; }
+.config-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border: 2px solid var(--line); background: var(--panel); box-shadow: var(--panel-shadow); }
+.config-toolbar .eyebrow, .config-toolbar h2 { margin: 0; }
+.config-section { padding: 16px; border: 2px solid var(--line); background: var(--panel); box-shadow: var(--panel-shadow); }
+.config-section .section-heading { margin: -16px -16px 14px; }
+.config-form { display: grid; align-items: end; gap: 10px; margin-bottom: 14px; }
+.reason-form { grid-template-columns: .55fr 1.2fr .75fr auto auto auto; }
+.break-form { grid-template-columns: 1fr 1.2fr .55fr .55fr auto auto auto; }
+.calendar-form { grid-template-columns: .65fr .85fr auto 1.3fr auto; }
+.ideal-cycle-form { grid-template-columns: minmax(250px,.7fr) minmax(240px,1.3fr) auto; }
+.physical-state-form { grid-template-columns: repeat(4,minmax(190px,1fr)); }
+.physical-state-form .button { min-height: 44px; }
+.form-help { margin: 0; padding: 10px 12px; border-left: 4px solid #2469aa; background: #fff; color: #555; font-size: 13px; }
+.check-field { display: flex; min-height: 44px; align-items: center; gap: 8px; padding: 8px; border: 1px solid #999; background: #fff; white-space: nowrap; }
+.check-field input { width: 19px; height: 19px; margin: 0; }
+.form-actions { display: flex; gap: 7px; }
+.form-actions .button { min-height: 44px; }
+.config-section .table-scroll { max-height: 280px; border: 1px solid #999; background: #fff; }
+.config-section thead { position: sticky; top: 0; z-index: 1; }
+.config-section th:last-child, .config-section td:last-child { text-align: right; white-space: nowrap; }
+.config-section td .button { min-height: 34px; margin-left: 5px; padding: 5px 9px; font-size: 12px; }
+@media(max-width:1200px) { .reason-form, .break-form, .calendar-form, .ideal-cycle-form, .physical-state-form { grid-template-columns: repeat(2,minmax(180px,1fr)); } }
+@media(max-width:650px) { .reason-form, .break-form, .calendar-form, .ideal-cycle-form, .physical-state-form { grid-template-columns: 1fr; } .config-toolbar { align-items: stretch; gap: 12px; flex-direction: column; } .config-toolbar .button,.form-actions .button { flex: 1; } .form-actions { flex-wrap: wrap; } }

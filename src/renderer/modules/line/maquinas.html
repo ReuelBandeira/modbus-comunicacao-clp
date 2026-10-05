@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Máquinas</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/ihm.css">
+    <link rel="stylesheet" href="line.css">
+    <link rel="stylesheet" href="maquinas.css">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="maquinas.js" defer></script>
+    <script src="../../js/navigation.js" defer></script>
+</head>
+<body>
+    <header class="top-bar">
+        <h1 class="screen-title">PCM - MÁQUINAS</h1>
+        <div class="connection">
+            <span id="connection-dot" class="dot"></span>
+            <span id="sync-status" role="status">Carregando máquinas…</span>
+            <button id="station-restart" class="toolbar-restart" type="button" disabled title="Reiniciar a estação com senha ADMIN">
+                <span aria-hidden="true">↺</span> REINICIAR ESTAÇÃO
+            </button>
+        </div>
+    </header>
+
+    <dialog id="station-restart-dialog" class="station-restart-dialog" aria-labelledby="station-restart-title">
+        <form id="station-restart-form">
+            <div class="restart-dialog-heading">
+                <span class="restart-dialog-icon" aria-hidden="true">↺</span>
+                <div>
+                    <p class="eyebrow">AÇÃO TEMPORÁRIA E RESTRITA</p>
+                    <h2 id="station-restart-title">Reiniciar estação</h2>
+                </div>
+            </div>
+            <p class="restart-warning"><strong>Este reset apaga os dados de teste da linha.</strong> Ele removerá todas as bandejas da linha, executará o comando exclusivo de reinicialização, zerará e conferirá os handshakes das CLPs e criará uma nova bandeja de teste pronta para ser liberada na Entrada. O histórico do log de comunicação será preservado.</p>
+            <label for="station-restart-password">Senha ADMIN</label>
+            <input id="station-restart-password" type="password" maxlength="200" autocomplete="current-password" required>
+            <p id="station-restart-error" class="restart-dialog-error" role="alert" hidden></p>
+            <div class="restart-dialog-actions">
+                <button id="station-restart-cancel" class="button secondary" type="button">Cancelar</button>
+                <button class="button danger" type="submit">Confirmar reinicialização</button>
+            </div>
+        </form>
+    </dialog>
+
+    <main class="machines-main">
+        <p id="message" class="notice" role="status" aria-live="assertive" hidden></p>
+
+        <section id="workflow-alert-panel" class="workflow-alert-panel" role="alert" aria-live="assertive" hidden>
+            <div class="workflow-alert-icon" aria-hidden="true">!</div>
+            <div>
+                <strong id="workflow-alert-title">QR de saída divergente</strong>
+                <p id="workflow-alert-message"></p>
+                <div class="workflow-alert-values">
+                    <span>Esperado <code id="workflow-alert-expected">—</code></span>
+                    <span>Recebido <code id="workflow-alert-received">—</code></span>
+                </div>
+                <small>A saída não foi confirmada. Verifique a bandeja e a leitura da CLP.</small>
+            </div>
+        </section>
+
+        <section id="active-alarm-panel" class="panel active-alarm-panel" aria-labelledby="active-alarm-title" hidden>
+            <div class="alarm-panel-heading">
+                <div><p class="eyebrow">MONITORAMENTO</p><h2 id="active-alarm-title">Alarmes ativos</h2></div>
+                <span id="active-alarm-count" class="alarm-count">0</span>
+            </div>
+            <div id="active-alarm-list" class="active-alarm-list" aria-live="assertive"></div>
+        </section>
+        <details id="alarm-history-panel" class="alarm-history-panel" hidden>
+            <summary>Histórico recente de alarmes</summary>
+            <div id="alarm-history-list" class="alarm-history-list"></div>
+        </details>
+
+        <section class="panel general-panel" aria-labelledby="general-title">
+            <div class="section-heading">
+                <div><p class="eyebrow">LINHA COMPLETA</p><h2 id="general-title">Controle geral</h2></div>
+            </div>
+            <div id="general-controls" class="general-controls">
+                <button id="general-start" class="ihm-control start general-control" type="button" disabled>
+                    <span class="control-icon" aria-hidden="true">▶</span>
+                    <span class="control-label">Start</span>
+                    <span class="control-status">Não configurado</span>
+                </button>
+                <button id="general-stop" class="ihm-control stop general-control" type="button" disabled>
+                    <span class="control-icon" aria-hidden="true">■</span>
+                    <span class="control-label">Stop</span>
+                    <span class="control-status">Não configurado</span>
+                </button>
+                <button id="general-reset" class="ihm-control reset general-control" type="button" disabled>
+                    <span class="control-icon" aria-hidden="true">↺</span>
+                    <span class="control-label">Reset</span>
+                    <span class="control-status">Não configurado</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Temporariamente oculto; os comandos e a configuração permanecem preservados. -->
+        <section class="panel machines-panel" aria-labelledby="machines-title" hidden>
+            <div class="section-heading">
+                <div><p class="eyebrow">CONTROLE OPERACIONAL</p></div>
+                <span id="last-command" class="last-command">Nenhum comando executado</span>
+            </div>
+            <div id="machine-grid" class="machine-grid" aria-live="polite">
+                <div class="empty"><strong>Aguardando as máquinas cadastradas</strong></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bottom-nav" data-navigation aria-label="Navegação principal"></footer>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM - Teste TCP</title>
+    <link rel="stylesheet" href="../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/tcp.css">
+    <script src="../js/tcp.js" defer></script>
+    <link rel="stylesheet" href="../css/navigation.css">
+    <script src="../js/navigation.js" defer></script>
+</head>
+<body>
+    <div class="tcp-layout">
+        <header class="top-bar">
+            <h1>PCM - GRINDING MACHINE</h1>
+            <span>TESTE TCP/IP</span>
+        </header>
+
+        <main class="main-content">
+            <aside class="side-panel" aria-labelledby="connection-title">
+                <h2 id="connection-title" class="section-title">CONEXÃO</h2>
+                <form id="tcp-form">
+                    <div class="mb-3">
+                        <label for="host" class="form-label">IP OU ENDEREÇO</label>
+                        <input id="host" class="form-control" required placeholder="192.168.0.10">
+                    </div>
+                    <div class="mb-4">
+                        <label for="port" class="form-label">PORTA TCP</label>
+                        <input id="port" class="form-control" type="number" min="1" max="65535" required placeholder="5000">
+                    </div>
+                    <button id="connect" class="btn btn-success machine-btn" type="submit">CONECTAR</button>
+                    <button id="disconnect" class="btn btn-warning machine-btn" type="button" disabled>DESCONECTAR</button>
+                    <button id="clear" class="btn btn-secondary machine-btn" type="button">LIMPAR REGISTROS</button>
+                    <button id="save-log" class="btn btn-primary machine-btn" type="button" disabled>SALVAR TXT</button>
+                    <p id="save-status" role="status" style="overflow-wrap: anywhere;"></p>
+                </form>
+                <div class="status-box">
+                    <span class="info-label">STATUS DA CONEXÃO</span>
+                    <p id="tcp-status" role="status">Desconectado.</p>
+                </div>
+            </aside>
+
+            <section class="machine-panel" aria-labelledby="monitor-title">
+                <h2 id="monitor-title" class="machine-header">MONITORAMENTO TCP/IP</h2>
+                <div class="info-area">
+                    <div class="value-card">
+                        <span class="info-label">DADOS RECEBIDOS</span>
+                        <div class="digital-display"><span id="byte-count">0</span> <span class="unit">bytes</span></div>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-label">MODO DE COMUNICAÇÃO</span>
+                        <strong>CLIENTE TCP</strong>
+                        <span>Recepção de dados da máquina</span>
+                    </div>
+                </div>
+                <h3 class="log-title">REGISTROS RECEBIDOS</h3>
+                <div id="tcp-log" class="tcp-log" tabindex="0" aria-label="Dados recebidos"></div>
+            </section>
+        </main>
+
+        <footer class="bottom-nav" data-navigation aria-label="Navega&#231;&#227;o principal"></footer>
+    </div>
+</body>
+</html>

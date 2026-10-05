@@ -1,0 +1,56 @@
+.report-main { overflow-y: auto; gap: 18px; }
+.report-main > * { flex-shrink: 0; }
+.monitor-functions { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 2px solid #6c7b86; border-left: 7px solid #2469aa; background: #e9eef2; box-shadow: var(--panel-shadow); }
+.monitor-functions h2 { margin: 2px 0 4px; font-size: 20px; }
+.monitor-functions p { margin: 0; color: #555; font-size: 12px; }
+.monitor-functions .eyebrow { color: #2469aa; font-weight: bold; letter-spacing: 1px; }
+.monitor-oee-link { min-width: 210px; min-height: 48px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.report-controls { display: grid; grid-template-columns: repeat(3,minmax(170px,1fr)) auto; align-items: end; gap: 12px; margin-bottom: 14px; padding: 12px; border: 1px solid #999; background: #d6d9dc; }
+.report-heading .eyebrow { margin: 0 0 4px; }
+.report-controls .button { min-height: 44px; }
+.report-section, .trend-panel, .hourly-panel { margin: 0; }
+.report-section { padding: 14px; border: 2px solid var(--line); background: var(--panel); box-shadow: var(--panel-shadow); }
+.report-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.report-heading .muted { text-align: right; font-size: 12px; }
+.chip-metrics { display: grid; grid-template-columns: repeat(5,minmax(150px,1fr)); gap: 12px; }
+.chip-metrics article { min-width: 0; padding: 14px; border: 2px solid #999; border-top: 7px solid #2469aa; background: #fff; }
+.chip-metrics article.approved-card { border-top-color: #3b9947; }
+.chip-metrics article.rejected-card { border-top-color: #c9302c; }
+.chip-metrics span, .chip-metrics small { display: block; }
+.chip-metrics span { color: #555; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+.chip-metrics strong { display: block; margin: 5px 0; overflow: hidden; color: #212529; font-size: clamp(25px,3vw,38px); text-overflow: ellipsis; white-space: nowrap; }
+.chip-metrics small { color: #657078; font-size: 11px; }
+.approved-card strong { color: #226533; }
+.rejected-card strong { color: #982f2f; }
+.quality-note { margin: 10px 0 0; padding: 8px 10px; border-left: 5px solid #e0a800; background: #fff3cd; color: #685313; font-size: 12px; }
+.trend-panel, .hourly-panel { padding: 14px; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; }
+.chart-legend span { display: flex; align-items: center; gap: 5px; }
+.chart-legend i { width: 12px; height: 12px; }
+.chart-legend .approved, .bar-approved { background: #3b9947; }
+.chart-legend .rejected, .bar-rejected { background: #c9302c; }
+.chart-legend .unknown, .bar-unknown { background: #e0a800; }
+.chart-scroll { overflow-x: auto; padding: 8px 0 2px; border: 2px inset #999; background: #fff; }
+.trend-chart { display: grid; grid-template-columns: repeat(24,minmax(42px,1fr)); align-items: end; gap: 6px; min-width: 1040px; height: 245px; padding: 24px 12px 8px; }
+.hour-column { display: grid; grid-template-rows: 18px 170px 24px; align-items: end; min-width: 0; height: 100%; text-align: center; }
+.hour-total { align-self: start; font-size: 11px; font-weight: bold; }
+.bar-space { display: flex; align-items: end; justify-content: center; height: 170px; border-bottom: 2px solid #777; }
+.bar-stack { display: flex; width: min(28px,75%); min-height: 2px; flex-direction: column-reverse; background: #d6d9dc; }
+.bar-stack > span { min-height: 0; }
+.hour-label { padding-top: 5px; color: #555; font-size: 10px; white-space: nowrap; }
+.hourly-panel .table-scroll { max-height: 390px; border: 1px solid #999; }
+.hourly-panel th { position: sticky; top: 0; z-index: 1; }
+.hourly-panel td:nth-child(n+2), .hourly-panel th:nth-child(n+2) { text-align: right; }
+.report-updated { margin: 0; color: #555; text-align: right; font-size: 11px; }
+.report-page.stale .report-section, .report-page.stale .trend-panel, .report-page.stale .hourly-panel { opacity: .6; }
+@media(max-width:1150px) {
+    .report-controls { grid-template-columns: 1fr 1fr; }
+    .chip-metrics { grid-template-columns: repeat(3,minmax(150px,1fr)); }
+}
+@media(max-width:700px) {
+    .monitor-functions { align-items: stretch; flex-direction: column; }
+    .monitor-oee-link { width: 100%; }
+    .report-controls, .chip-metrics { grid-template-columns: 1fr; }
+    .report-heading { align-items: flex-start; flex-direction: column; }
+    .report-heading .muted { text-align: left; }
+}

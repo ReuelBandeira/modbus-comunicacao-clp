@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Acompanhamento da linha</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/ihm.css">
+    <link rel="stylesheet" href="line.css">
+    <script src="line.js" defer></script>
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="../../js/navigation.js" defer></script>
+</head>
+
+<body>
+    <header class="top-bar">
+        <h1 id="screen-title" class="screen-title">PCM - ACOMPANHAMENTO DA LINHA</h1>
+        <div class="connection"><span id="connection-dot" class="dot"></span><span id="sync-status"
+                role="status">Conectando ao banco…</span></div>
+    </header>
+    <main>
+        <div id="notice" class="notice" role="status" hidden></div>
+        <section id="overview-panel" class="screen-panel" aria-label="Acompanhamento da linha">
+            <div class="metrics">
+                <article><span>Em andamento</span><strong id="metric-progress">—</strong><small>Bandejas na
+                        linha</small></article>
+                <article><span>Concluídas</span><strong id="metric-completed">—</strong><small>Passaram por todas as
+                        estações</small></article>
+                <article class="rejected-metric"><span>Reprovadas</span><strong
+                        id="metric-rejected">—</strong><small>Inclui bandejas ainda na linha</small></article>
+                <article><span>Total de entradas</span><strong id="metric-total">—</strong><small>Desde o início dos
+                        registros</small></article>
+            </div>
+            <section class="panel machine-panel flow-panel">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">FLUXO DA LINHA</p>
+                        <h2>Estações de trabalho</h2>
+                    </div><span id="machine-count" class="muted"></span>
+                </div>
+                <div id="stations" class="stations">
+                    <div class="empty"><strong>Aguardando os dados da linha</strong>
+                        <p>O estado das estações será consultado no banco.</p>
+                    </div>
+                </div>
+                <div class="legend"><span><i class="dot teal"></i>Em processo</span><span><i
+                            class="dot green"></i>Resultado OK</span><span><i
+                            class="dot red"></i>Reprovada</span><span><i class="dot amber"></i>Bypass · sem
+                        processar</span></div>
+            </section>
+            <section class="panel machine-panel">
+                <div class="section-heading history-heading">
+                    <div>
+                        <h2>Últimas bandejas</h2>
+                        <p class="muted">As 50 entradas mais recentes. Consulte qualquer serial.</p>
+                    </div>
+                    <form id="lookup-form" class="inline-form"><label class="sr-only" for="lookup-serial">Consultar QR
+                            no banco</label><input id="lookup-serial" placeholder="Consultar serial" required
+                            maxlength="512"><button type="submit" class="button secondary">Consultar</button></form>
+                </div>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ordem</th>
+                                <th>QR da bandeja</th>
+                                <th>Entrada</th>
+                                <th>Posição</th>
+                                <th>Qualidade</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="history">
+                            <tr>
+                                <td colspan="6" class="table-empty">Aguardando dados.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+
+        <section id="machines-panel" class="screen-panel" aria-label="Cadastro de máquinas" hidden>
+            <section class="panel machine-panel">
+                <div id="config-lock" class="inline-note" role="status" hidden></div>
+                <form id="config-form">
+                    <fieldset id="config-fields">
+                        <div class="config-grid"><label>Identificador da linha<input id="config-line-id" readonly
+                                    required></label><label>Nome da linha<input id="config-name" required
+                                    maxlength="100" placeholder="Ex.: Linha de montagem 1"></label><label>IP · último
+                                octeto mínimo<input id="config-min" type="number" min="1" max="254" required
+                                    value="25"></label><label>IP · último octeto máximo<input id="config-max"
+                                    type="number" min="1" max="254" required value="75"></label></div>
+                        <div class="machine-list-heading">
+                            <h3>Sequência das estações</h3><span class="muted">Use ↑ e ↓ para reordenar.</span>
+                        </div>
+                        <div id="machine-editor" class="machine-editor"></div>
+                        <button type="button" id="add-machine" class="button secondary">＋ Adicionar máquina</button>
+                    </fieldset>
+                    <div class="form-footer">
+                        <p id="config-note" class="muted">As alterações serão gravadas no banco.</p>
+                        <div class="button-group"><button type="button" id="reload-config"
+                                class="button secondary">Recarregar cadastro</button><button type="submit"
+                                id="save-config" class="button primary">Salvar configuração</button></div>
+                    </div>
+                </form>
+            </section>
+        </section>
+
+    </main>
+    <footer class="bottom-nav" data-navigation aria-label="Navega&#231;&#227;o principal"></footer>
+    <dialog id="tray-dialog" aria-labelledby="tray-title">
+        <div class="dialog-heading">
+            <div>
+                <p class="eyebrow">HISTÓRICO DA BANDEJA</p>
+                <h2 id="tray-title"></h2>
+            </div><button id="close-dialog" class="icon-button" aria-label="Fechar histórico">×</button>
+        </div>
+        <div id="tray-summary" class="tray-summary"></div>
+        <div id="tray-stages"></div>
+        <div class="dialog-footer"><span id="tray-updated" class="muted"></span><div class="button-group">
+            <button id="advance-tray" class="button warning" type="button" hidden>ENVIAR PARA A PRÓXIMA ESTAÇÃO</button>
+            <button id="refresh-tray" class="button secondary">Atualizar detalhes</button></div></div>
+    </dialog>
+    <dialog id="advance-dialog" class="advance-dialog" aria-labelledby="advance-title">
+        <div class="dialog-heading">
+            <div><p class="eyebrow">INTERVENÇÃO MANUAL AUDITADA</p><h2 id="advance-title">Enviar bandeja para a próxima estação</h2></div>
+            <button id="close-advance" class="icon-button" type="button" aria-label="Cancelar avanço">×</button>
+        </div>
+        <form id="advance-form" class="advance-form">
+            <p id="advance-context" class="advance-context"></p>
+            <p class="physical-warning">Esta operação ignora a execução normal da etapa atual. Confirme fisicamente que a bandeja foi movimentada e que a estação/CLP atual está liberada.</p>
+            <label>Motivo<input id="advance-reason" minlength="3" maxlength="120" required placeholder="Ex.: teste da integração IFTS"></label>
+            <label>Observação<textarea id="advance-notes" maxlength="500" rows="4" placeholder="Detalhes opcionais"></textarea></label>
+            <label class="physical-confirm"><input id="advance-physical" type="checkbox" required>
+                Confirmo a movimentação física da bandeja e a liberação da estação atual.</label>
+            <label>Senha ADMIN<input id="advance-password" type="password" maxlength="200" autocomplete="current-password" required></label>
+            <button id="confirm-advance" class="button warning" type="submit">CONFIRMAR AVANÇO</button>
+        </form>
+    </dialog>
+    <dialog id="communication-dialog" class="communication-dialog" aria-labelledby="communication-title">
+        <div class="dialog-heading">
+            <div>
+                <p class="eyebrow">DIAGNÓSTICO MODBUS TCP</p>
+                <h2 id="communication-title">Comunicação Node ↔ CLP</h2>
+            </div><button id="close-communication" class="icon-button" aria-label="Fechar console">×</button>
+        </div>
+        <div class="communication-toolbar">
+            <label>Máquina<select id="communication-machine"><option value="">Todas</option></select></label>
+            <button id="popout-communication" class="button primary" type="button">Abrir em janela</button>
+            <button id="pause-communication" class="button secondary" type="button">Pausar</button>
+            <button id="clear-communication" class="button secondary" type="button">Limpar tela</button>
+            <span id="communication-status" class="muted" role="status">Aguardando registros.</span>
+        </div>
+        <div id="communication-log" class="communication-log" aria-live="polite"></div>
+        <div class="communication-legend">
+            <span><i class="direction plc"></i>CLP → Node</span>
+            <span><i class="direction node"></i>Node → CLP</span>
+            <span><i class="direction system"></i>Sistema</span>
+        </div>
+    </dialog>
+</body>
+
+</html>

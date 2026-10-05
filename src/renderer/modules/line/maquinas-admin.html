@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Cadastro de máquinas IHM</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/ihm.css">
+    <link rel="stylesheet" href="line.css">
+    <link rel="stylesheet" href="maquinas-admin.css">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="maquinas-admin.js" defer></script>
+    <script src="../../js/navigation.js" defer></script>
+</head>
+<body>
+    <header class="top-bar">
+        <h1 class="screen-title">PCM - CADASTRO DE MÁQUINAS IHM</h1>
+        <div class="connection"><span id="connection-dot" class="dot"></span><span id="admin-status">Acesso ADMIN necessário</span></div>
+    </header>
+
+    <main class="ihm-admin-main">
+        <section id="login-panel" class="panel admin-login">
+            <div class="section-heading"><div><p class="eyebrow">ACESSO RESTRITO</p><h2>Autenticação ADMIN</h2></div></div>
+            <form id="admin-login-form" class="login-form">
+                <label for="admin-password">Senha ADMIN<input id="admin-password" type="password" maxlength="200" autocomplete="current-password" required autofocus></label>
+                <button class="button primary" type="submit">Entrar</button>
+            </form>
+        </section>
+
+        <section id="admin-content" hidden>
+            <div class="page-toolbar">
+                <div><p class="eyebrow">CONFIGURAÇÃO DA IHM</p><h2>Máquinas e comandos</h2><p>Este cadastro é independente das máquinas do fluxo produtivo.</p></div>
+                <button id="admin-exit" class="button secondary" type="button">Sair do ADMIN</button>
+            </div>
+            <p id="message" class="notice" role="status" aria-live="polite" hidden></p>
+
+            <div class="admin-layout">
+                <section class="panel machine-editor">
+                    <div class="section-heading"><div><p class="eyebrow">CADASTRO</p><h2 id="editor-title">Nova máquina IHM</h2></div></div>
+                    <form id="machine-form" class="machine-form">
+                        <label for="machine-id">Identificador
+                            <input id="machine-id" maxlength="80" pattern="[A-Za-z0-9_-]{1,80}" placeholder="prensa-01" autocomplete="off" required>
+                        </label>
+                        <label for="machine-name">Nome exibido
+                            <input id="machine-name" maxlength="100" placeholder="Prensa 01" autocomplete="off" required>
+                        </label>
+                        <label for="machine-order">Ordem
+                            <input id="machine-order" type="number" min="0" max="9999" value="0" required>
+                        </label>
+                        <label class="check-field"><input id="machine-enabled" type="checkbox" checked> Exibir na tela operacional</label>
+
+                        <fieldset class="command-links">
+                            <legend>Comandos da máquina</legend>
+                            <p>Selecione comandos já cadastrados em Sinais e comandos CLP.</p>
+                            <label for="machine-start">Start<select id="machine-start"></select></label>
+                            <label for="machine-stop">Stop<select id="machine-stop"></select></label>
+                            <label for="machine-reset">Reset<select id="machine-reset"></select></label>
+                        </fieldset>
+
+                        <div class="form-actions">
+                            <button id="cancel-edit" class="button secondary" type="button" hidden>Cancelar edição</button>
+                            <button id="save-machine" class="button success" type="submit">Cadastrar máquina</button>
+                        </div>
+                    </form>
+                    <p class="general-help"><strong>Controles gerais:</strong> configure comandos com destino Linha e códigos START, STOP e RESET na tela de sinais. Para o botão temporário da toolbar, cadastre um quarto comando independente com o código exato <code>REINICIAR_ESTACAO</code>.</p>
+                </section>
+
+                <section class="panel machine-list-panel">
+                    <div class="section-heading"><div><p class="eyebrow">MÁQUINAS DA TELA</p><h2>Cadastros existentes</h2></div><span id="machine-total" class="count-badge">0</span></div>
+                    <div class="table-scroll">
+                        <table>
+                            <thead><tr><th>Ordem / máquina</th><th>Status</th><th>Comandos</th><th>Ações</th></tr></thead>
+                            <tbody id="machine-list"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+    <footer class="bottom-nav" data-navigation aria-label="Navegação principal"></footer>
+</body>
+</html>

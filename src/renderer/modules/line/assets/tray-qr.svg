@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 100" role="img" aria-labelledby="title">
+  <title id="title">Bandeja com QR Code</title>
+  <g fill="none" stroke="#858b90" stroke-linejoin="round">
+    <path d="M31 32 44 17h91l14 15" stroke-width="8"/>
+    <path d="M25 35h130l-13 45c-1 4-5 7-10 7H48c-5 0-9-3-10-7Z" fill="#858b90" stroke-width="4"/>
+    <path d="M49 28h82" stroke="#eef0f1" stroke-width="5"/>
+    <path d="M63 27v11m54-11v11" stroke="#eef0f1" stroke-width="5"/>
+  </g>
+  <g transform="translate(71 44)" fill="#f5f6f7">
+    <rect width="38" height="38" rx="1"/>
+  </g>
+  <g transform="translate(76 49)" fill="none" stroke="#858b90" stroke-width="4">
+    <rect width="9" height="9"/><rect x="19" width="9" height="9"/>
+    <rect y="19" width="9" height="9"/><path d="M19 19h9v9h-9zm-5-5h5m-5 0v9m5-9v5m9-5v5"/>
+  </g>
+</svg>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Operadores</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/ihm.css">
+    <link rel="stylesheet" href="line.css">
+    <link rel="stylesheet" href="principal.css">
+    <script src="principal.js" defer></script>
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="../../js/navigation.js" defer></script>
+</head>
+<body>
+    <header class="top-bar">
+        <h1 class="screen-title">PCM - OPERADORES</h1>
+        <div class="connection"><span id="connection-dot" class="dot"></span><span id="sync-status" role="status">Conectando ao banco…</span></div>
+    </header>
+    <main class="principal-main">
+        <section class="principal-summary" aria-label="Contexto da estação">
+            <article class="summary-card shift-summary">
+                <span class="summary-label">TURNO ATUAL</span>
+                <strong id="shift-name">—</strong>
+                <small id="shift-time">Nenhum turno vigente</small>
+            </article>
+            <article class="summary-card count-summary">
+                <span class="summary-label">OPERADORES ATIVOS</span>
+                <strong id="active-count">0 / 3</strong>
+                <small id="staffing-status">Equipe mínima pendente</small>
+            </article>
+        </section>
+
+        <section class="principal-layout">
+            <section class="panel machine-panel operator-entry-panel">
+                <div class="section-heading"><div><p class="eyebrow">IDENTIFICAÇÃO</p><h2>Entrada e saída</h2></div></div>
+                <form id="operator-scan-form" class="operator-scan-form">
+                    <label class="operator-registration-field" for="operator-registration">Matrícula
+                        <input id="operator-registration" maxlength="80" pattern="(?:[A-Za-z0-9_]|-)+" autocomplete="off" required autofocus placeholder="Aguardando matrícula">
+                    </label>
+                    <button id="operator-submit" class="button primary" type="submit">Confirmar matrícula</button>
+                </form>
+                <p id="operation-message" class="operation-message" data-tone="info" data-visible="false" role="status" aria-live="polite"></p>
+            </section>
+
+            <section class="panel machine-panel active-operators-panel">
+                <div class="section-heading"><div><h2>Operadores ativos</h2></div></div>
+                <div id="active-operators" class="active-operators">
+                    <div class="empty"><strong>Aguardando os dados da estação</strong></div>
+                </div>
+            </section>
+        </section>
+    </main>
+    <footer class="bottom-nav" data-navigation aria-label="Navegação principal"></footer>
+</body>
+</html>

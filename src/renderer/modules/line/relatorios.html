@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Indicadores de chips</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/ihm.css">
+    <link rel="stylesheet" href="line.css">
+    <link rel="stylesheet" href="relatorios.css">
+    <script src="relatorios.js" defer></script>
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="../../js/navigation.js" defer></script>
+</head>
+<body class="report-page">
+    <header class="top-bar">
+        <h1 class="screen-title">PCM - MONITORES</h1>
+        <div class="connection"><span id="connection-dot" class="dot"></span><span id="sync-status" role="status">Carregando relatório…</span></div>
+    </header>
+    <main class="report-main">
+        <div id="notice" class="notice" role="status" hidden></div>
+        <section class="monitor-functions" aria-label="Funções de monitoramento">
+            <div><p class="eyebrow">MONITORAMENTO</p><h2>Painéis da linha</h2><p>Acompanhe os indicadores de chips ou abra disponibilidade, performance e qualidade.</p></div>
+            <a class="button primary monitor-oee-link" href="oee.html">ABRIR PAINEL OEE</a>
+        </section>
+        <section class="report-section" aria-labelledby="current-title">
+            <div class="report-heading"><div><p class="eyebrow">TEMPO REAL</p><h2 id="current-title">Chips · hora atual</h2></div>
+                <span id="current-range" class="muted"></span></div>
+            <div class="chip-metrics" data-scope="current">
+                <article><span>Produzidos</span><strong id="current-produced">—</strong><small>Chips processados</small></article>
+                <article class="approved-card"><span>Aprovados</span><strong id="current-approved">—</strong><small>OK em todas as estações</small></article>
+                <article class="rejected-card"><span>Reprovados</span><strong id="current-rejected">—</strong><small>Falha em ao menos uma estação</small></article>
+                <article><span>Aprovação</span><strong id="current-rate">—</strong><small>Sobre chips produzidos</small></article>
+                <article><span>Ciclo médio</span><strong id="current-cycle">—</strong><small>Entrada até a saída da bandeja</small></article>
+            </div>
+            <p id="current-quality-note" class="quality-note" hidden></p>
+        </section>
+
+        <section class="report-section" aria-labelledby="period-title">
+            <div class="report-heading"><div><p class="eyebrow">PERÍODO SELECIONADO</p><h2 id="period-title">Resumo de chips</h2></div>
+                <span id="period-range" class="muted"></span></div>
+            <div class="report-controls" aria-label="Filtros do período">
+                <label>Período<select id="period-preset">
+                    <option value="today">Hoje</option><option value="24h">Últimas 24 horas</option>
+                    <option value="7d">Últimos 7 dias</option><option value="30d">Últimos 30 dias</option>
+                    <option value="custom">Personalizado</option>
+                </select></label>
+                <label>De<input id="period-from" type="datetime-local" required></label>
+                <label>Até<input id="period-to" type="datetime-local" required></label>
+                <button id="apply-period" class="button primary" type="button">Aplicar período</button>
+            </div>
+            <div class="chip-metrics" data-scope="period">
+                <article><span>Total produzido</span><strong id="period-produced">—</strong><small>Chips processados no período</small></article>
+                <article class="approved-card"><span>Total aprovados</span><strong id="period-approved">—</strong><small>OK em todas as estações</small></article>
+                <article class="rejected-card"><span>Total reprovados</span><strong id="period-rejected">—</strong><small>Com uma ou mais falhas</small></article>
+                <article><span>Aprovação geral</span><strong id="period-rate">—</strong><small>Sobre chips produzidos</small></article>
+                <article><span>Ciclo médio</span><strong id="period-cycle">—</strong><small>Entrada até a saída da bandeja</small></article>
+            </div>
+            <p id="period-quality-note" class="quality-note" hidden></p>
+        </section>
+
+        <section class="machine-panel trend-panel" aria-labelledby="trend-title">
+            <div class="report-heading"><div><p class="eyebrow">TENDÊNCIA · ÚLTIMAS 24 HORAS</p><h2 id="trend-title">Produção de chips por hora</h2></div>
+                <div class="chart-legend"><span><i class="approved"></i>Aprovados</span><span><i class="rejected"></i>Reprovados</span><span><i class="unknown"></i>Indeterminados</span></div></div>
+            <div class="chart-scroll"><div id="trend-chart" class="trend-chart" aria-label="Gráfico de produção das últimas 24 horas"></div></div>
+        </section>
+
+        <section class="machine-panel hourly-panel" aria-labelledby="hourly-title">
+            <div class="report-heading"><div><p class="eyebrow">HISTÓRICO</p><h2 id="hourly-title">Resultados por hora</h2></div>
+                <span class="muted">Período selecionado</span></div>
+            <div class="table-scroll"><table><thead><tr><th>Data e hora</th><th>Produzidos</th><th>Aprovados</th>
+                <th>Reprovados</th><th>Indeterminados</th><th>Aprovação</th></tr></thead><tbody id="hourly-history"></tbody></table></div>
+        </section>
+        <p id="report-updated" class="report-updated"></p>
+    </main>
+    <footer class="bottom-nav" data-navigation aria-label="Navegação principal"></footer>
+</body>
+</html>

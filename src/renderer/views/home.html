@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PCM - IHM</title>
+
+    <link href="../vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+    <link href="../css/ihm.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            background: #bfc3c7;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow: hidden;
+        }
+
+        .ihm-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #d6d9dc;
+        }
+
+        /* HEADER */
+
+
+
+
+
+
+
+
+
+        /* CONTEÚDO */
+
+        .main-content {
+            min-height: 0;
+            overflow: auto;
+            flex: 1;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 20px;
+        }
+
+        /* PAINEL ESQUERDO */
+
+        .side-panel {
+            background: #eeeeee;
+            border: 2px solid #8c8c8c;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            background: #555;
+            color: white;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        .status-box {
+            text-align: center;
+            background: white;
+            border: 2px solid #777;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .status-light {
+            width: 45px;
+            height: 45px;
+            margin: auto;
+            border-radius: 50%;
+            background: #20d35a;
+            box-shadow:
+                0 0 5px #20d35a,
+                0 0 15px #20d35a;
+            margin-bottom: 10px;
+        }
+
+        .status-text {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* BOTÕES */
+
+        .machine-btn {
+            width: 100%;
+            height: 65px;
+            margin-bottom: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            border: 3px solid rgba(0, 0, 0, .25);
+        }
+
+        .emergency-btn {
+            height: 85px;
+            font-size: 20px;
+            font-weight: bold;
+            border: 5px solid #7d0000;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, .4);
+        }
+
+        /* CENTRO */
+
+
+
+        .machine-header {
+            background: #3b9947;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 21px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .value-card {
+            background: #d6d6d6;
+            border: 2px solid #888;
+            padding: 10px;
+        }
+
+        .value-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .digital-display {
+            background: #15191e;
+            color: #e9f5ff;
+            border: 5px inset #777;
+            padding: 20px;
+            text-align: center;
+            font-family: "Courier New", monospace;
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px #68b9ff;
+        }
+
+        .unit {
+            font-size: 18px;
+            color: #ccc;
+        }
+
+        /* INFORMAÇÕES */
+
+        .info-area {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .info-card {
+            background: #fff;
+            border: 2px solid #999;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 13px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .info-value {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+
+
+
+
+
+
+
+
+
+        .disabled {
+            pointer-events: none !important;
+            opacity: 40% !important;
+        }
+
+        /* ALARME */
+
+        .alarm-area {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff;
+            border: 2px solid #888;
+        }
+
+        .alarm-ok {
+            color: #15913d;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+    <link rel="stylesheet" href="../css/navigation.css">
+    <script src="../js/navigation.js" defer></script>
+</head>
+
+<body>
+
+    <div class="ihm-container">
+
+        <!-- CABEÇALHO -->
+        <header class="top-bar">
+
+            <h1>PCM - GRINDING MACHINE</h1>
+
+            <div class="connection">
+                <div class="connection-dot"></div>
+                MÁQUINA CONECTADA
+            </div>
+
+        </header>
+
+
+        <!-- CONTEÚDO -->
+        <main class="main-content">
+
+            <!-- CONTROLES -->
+            <aside class="side-panel">
+
+                <div class="section-title">
+                    CONTROLE
+                </div>
+
+                <div class="status-box">
+
+                    <div class="status-light"></div>
+
+                    <div class="status-text">
+                        RUNNING
+                    </div>
+
+                </div>
+
+                <button class="btn btn-success machine-btn" data-command="start">
+                    ▶ INICIAR
+                </button>
+
+                <button class="btn btn-warning machine-btn" data-command="stop">
+                    ■ PARAR
+                </button>
+
+                <button class="btn btn-secondary machine-btn" data-command="reset">
+                    ↻ RESET
+                </button>
+
+                <button class="btn btn-danger machine-btn emergency-btn" data-command="emergency">
+                    ⚠ EMERGÊNCIA
+                </button>
+
+            </aside>
+
+
+            <!-- PAINEL PRINCIPAL -->
+            <section class="machine-panel">
+
+                <div class="machine-header">
+                    MONITORAMENTO DA MÁQUINA
+                </div>
+
+
+                <div class="values-grid">
+
+                    <div class="value-card">
+
+                        <div class="value-title">
+                            LOAD CELL 01
+                        </div>
+
+                        <div class="digital-display">
+                            <span id="load1">0.000</span>
+                            <span class="unit">kg</span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="value-card">
+
+                        <div class="value-title">
+                            LOAD CELL 02
+                        </div>
+
+                        <div class="digital-display">
+                            <span id="load2">0.000</span>
+                            <span class="unit">kg</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-area">
+
+                    <div class="info-card">
+
+                        <div class="info-label">
+                            MODO
+                        </div>
+
+                        <div class="info-value">
+                            AUTO
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-card">
+
+                        <div class="info-label">
+                            CICLO
+                        </div>
+
+                        <div class="info-value">
+                            0025
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-card">
+
+                        <div class="info-label">
+                            TEMPO DE CICLO
+                        </div>
+
+                        <div class="info-value">
+                            00:02:31
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="alarm-area">
+
+                    <strong>STATUS:</strong>
+
+                    <span class="alarm-ok">
+                        ● SISTEMA OPERACIONAL
+                    </span>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- MENU -->
+        <footer class="bottom-nav" data-navigation aria-label="Navega&#231;&#227;o principal"></footer>
+
+    </div>
+
+
+    <script src="../js/home.js" defer></script>
+
+</body>
+
+</html>

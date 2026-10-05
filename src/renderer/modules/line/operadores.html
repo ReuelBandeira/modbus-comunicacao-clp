@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Operadores</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/ihm.css">
+    <link rel="stylesheet" href="line.css">
+    <link rel="stylesheet" href="operadores.css">
+    <script src="operadores.js" defer></script>
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="../../js/navigation.js" defer></script>
+</head>
+<body>
+    <header class="top-bar">
+        <h1 class="screen-title">PCM - CADASTRO DE OPERADORES</h1>
+        <div class="connection"><span id="connection-dot" class="dot"></span><span id="admin-status" role="status">Acesso ADMIN necessário</span></div>
+    </header>
+    <main class="operators-main">
+        <section id="login-panel" class="panel operators-login">
+            <div class="section-heading"><div><p class="eyebrow">ACESSO RESTRITO</p><h2>Autenticação ADMIN</h2></div></div>
+            <p class="help">Somente o ADMIN pode cadastrar ou editar operadores.</p>
+            <form id="admin-login-form" class="operators-form">
+                <label for="admin-password">Senha ADMIN<input id="admin-password" type="password" maxlength="200" autocomplete="current-password" required autofocus></label>
+                <div class="form-footer"><span></span><button id="admin-login" class="button primary" type="submit">Entrar</button></div>
+            </form>
+        </section>
+
+        <section id="operators-panel" class="operators-layout" hidden>
+            <section class="panel operator-editor">
+                <div class="section-heading"><div><p class="eyebrow">CADASTRO</p><h2 id="editor-title">Novo operador</h2></div></div>
+                <form id="operator-form" class="operators-form">
+                    <label for="operator-name">Nome<input id="operator-name" maxlength="100" autocomplete="off" required></label>
+                    <label for="operator-registration">Matrícula<input id="operator-registration" maxlength="80" pattern="(?:[A-Za-z0-9_]|-)+" autocomplete="off" required></label>
+                    <p class="help">A matrícula aceita letras, números, hífen e sublinhado.</p>
+                    <div class="form-footer">
+                        <button id="cancel-edit" class="button secondary" type="button" hidden>Cancelar edição</button>
+                        <button id="save-operator" class="button success" type="submit">Cadastrar</button>
+                    </div>
+                </form>
+                <section class="staffing-config" aria-labelledby="staffing-title">
+                    <div><p class="eyebrow">ENTRADA DA LINHA</p><h3 id="staffing-title">Equipe mínima</h3></div>
+                    <p class="help">Quantidade de operadores ativos necessária para permitir a bipagem da bandeja e dos chips.</p>
+                    <form id="staffing-form" class="staffing-form">
+                        <label for="minimum-operators">Operadores mínimos
+                            <input id="minimum-operators" type="number" min="1" max="99" required value="3">
+                        </label>
+                        <button id="save-staffing" class="button success" type="submit">Salvar equipe mínima</button>
+                    </form>
+                </section>
+            </section>
+
+            <section class="panel operator-list-panel">
+                <div class="section-heading"><div><p class="eyebrow">OPERADORES</p><h2>Cadastros</h2></div><button id="admin-exit" class="button secondary compact-button" type="button">Sair do ADMIN</button></div>
+                <div id="operator-message" class="notice" role="status" aria-live="polite" hidden></div>
+                <div class="table-scroll"><table><thead><tr><th>Nome</th><th>Matrícula</th><th>Ação</th></tr></thead><tbody id="operator-list"></tbody></table></div>
+            </section>
+        </section>
+    </main>
+    <footer class="bottom-nav" data-navigation aria-label="Navegação principal"></footer>
+</body>
+</html>

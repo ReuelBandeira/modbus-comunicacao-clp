@@ -1,0 +1,66 @@
+{
+  "name": "comunicacao-maquinas",
+  "version": "1.0.0",
+  "description": "Aplicacao para comunicacao TCP/IP com maquinas",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "simulate:clp": "node scripts/simulateClp.cjs",
+    "simulate:ifts": "node scripts/simulateIftsPlc.cjs",
+    "simulate:m1": "node scripts/simulateM1HandshakeClp.cjs",
+    "simulate:line": "node --env-file-if-exists=.env scripts/simulateProductionLine.cjs",
+    "build": "node scripts/cleanDist.cjs && tsc && node scripts/copyAssets.cjs",
+    "build:win": "npm run build && electron-builder --win portable --x64",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test --test-isolation=none scripts/test*.cjs",
+    "test:tcp": "npm run build && node --test scripts/testTcp.cjs",
+    "test:modbus": "npm run build && node --test scripts/testModbus.cjs",
+    "test:api": "npm run build && node --test scripts/testApi.cjs",
+    "test:pcm": "npm run build && node --test scripts/testPcmEntry.cjs",
+    "test:line": "npm run build && node --test --test-isolation=none scripts/testLineWorkflow.cjs scripts/testMachineSession.cjs scripts/testLineMongo.cjs",
+    "db:migrate": "npm run build && node --env-file-if-exists=.env dist/database/migrateMongo.cjs",
+    "db:up": "docker compose up -d mongo",
+    "db:logs": "docker compose logs -f mongo",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "start:api": "npm run build && node --env-file-if-exists=.env dist/api/server.js",
+    "start": "npm run build && node scripts/startElectron.cjs",
+    "dev": "npm run start"
+  },
+  "build": {
+    "appId": "br.com.conecthus.pcm",
+    "productName": "PCM IHM",
+    "directories": {
+      "output": "out"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable",
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "PCM-IHM-${version}-${arch}.exe"
+    }
+  },
+  "engines": {
+    "node": ">=22.9.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.1.0",
+    "modbus-serial": "^8.0.25",
+    "mongodb": "^7.6.0",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^26.5.1",
+    "@types/swagger-ui-express": "^4.1.8",
+    "electron": "^44.0.0",
+    "electron-builder": "^26.15.3",
+    "nodemon": "^3.1.14",
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Integração CLP</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/ihm.css">
+    <link rel="stylesheet" href="line.css">
+    <link rel="stylesheet" href="plc-signals.css">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="plc-signals.js" defer></script>
+    <script src="../../js/navigation.js" defer></script>
+</head>
+<body>
+<header class="top-bar">
+    <h1 class="screen-title">PCM - INTEGRAÇÃO CLP</h1>
+    <div class="connection"><span id="connection-dot" class="dot"></span><span id="admin-status">Acesso ADMIN necessário</span></div>
+</header>
+<main class="plc-main">
+    <section id="login-panel" class="panel access-panel">
+        <div class="section-heading"><div><p class="eyebrow">ACESSO RESTRITO</p><h2>Autenticação ADMIN</h2></div></div>
+        <form id="admin-login-form" class="compact-form">
+            <label>Senha ADMIN<input id="admin-password" type="password" maxlength="200" required autofocus></label>
+            <button class="button primary" type="submit">Entrar</button>
+        </form>
+    </section>
+    <div id="content-panel" hidden>
+        <div class="page-toolbar">
+            <div><p class="eyebrow">MODBUS TCP/IP</p><h2>CLPs, sinais e comandos</h2><p class="section-description">As CLPs possuem conexão própria e não fazem parte do cadastro das estações de processo.</p></div>
+            <button id="admin-exit" class="button secondary" type="button">Sair do ADMIN</button>
+        </div>
+        <p id="message" class="notice" role="status" hidden></p>
+
+        <section class="config-section plc-device-section">
+            <div class="section-heading"><div><p class="eyebrow">CONEXÕES</p><h2>CLPs cadastradas</h2><p class="section-description">Cadastre o endpoint físico antes de criar sinais ou comandos.</p></div></div>
+            <form id="device-form" class="config-grid device-grid">
+                <label>Nome da CLP<input id="device-name" maxlength="100" placeholder="CLP principal da linha" required></label>
+                <label>Endereço IP<input id="device-host" inputmode="decimal" maxlength="45" placeholder="192.168.1.10" required></label>
+                <label>Porta<input id="device-port" type="number" min="1" max="65535" value="502" required></label>
+                <label>Unit ID<input id="device-unit" type="number" min="1" max="247" value="1" required></label>
+                <label>Timeout (ms)<input id="device-timeout" type="number" min="100" max="10000" value="3000" required></label>
+                <label class="check-field"><input id="device-enabled" type="checkbox" checked> CLP ativa</label>
+                <button class="button success" type="submit">Cadastrar CLP</button>
+                <button id="device-cancel" class="button secondary" type="button" hidden>Cancelar edição</button>
+            </form>
+            <div id="device-list" class="device-list"></div>
+        </section>
+
+        <section class="config-section alarm-config-section">
+            <div class="section-heading"><div><p class="eyebrow">ALARMES</p><h2>Catálogo de alarmes</h2><p class="section-description">Transforme valores dos sinais monitorados em alarmes ativos, bloqueios e histórico.</p></div></div>
+            <form id="alarm-form" class="config-grid">
+                <label>Código<input id="alarm-code" maxlength="80" placeholder="M1_EMERGENCIA" pattern="[A-Za-z][A-Za-z0-9_]{2,79}" required></label>
+                <label>Título<input id="alarm-title" maxlength="100" placeholder="Emergência acionada" required></label>
+                <label>Sinal monitorado<select id="alarm-signal" required></select></label>
+                <label>Máquina IHM<select id="alarm-machine"><option value="">Alarme geral da linha</option></select></label>
+                <label>Valores que ativam<input id="alarm-values" maxlength="300" placeholder="2, 3" required></label>
+                <label>Gravidade<select id="alarm-severity"><option value="info">Informação</option><option value="warning">Alerta</option><option value="critical">Crítico</option><option value="emergency">Emergência</option></select></label>
+                <label>Atraso para ativar (ms)<input id="alarm-activation-delay" type="number" min="0" max="60000" value="0" required></label>
+                <label>Atraso para normalizar (ms)<input id="alarm-clear-delay" type="number" min="0" max="60000" value="0" required></label>
+                <label class="alarm-wide">Descrição<input id="alarm-description" maxlength="300" placeholder="Descrição apresentada ao operador"></label>
+                <label class="alarm-wide">Orientação ao operador<input id="alarm-instruction" maxlength="300" placeholder="Verifique o botão de emergência e rearme a máquina"></label>
+                <label class="check-field"><input id="alarm-blocks-entry" type="checkbox"> Bloquear novas entradas</label>
+                <label class="check-field"><input id="alarm-ack" type="checkbox"> Exigir reconhecimento</label>
+                <label class="check-field"><input id="alarm-enabled" type="checkbox" checked> Alarme ativo</label>
+                <button class="button success" type="submit">Cadastrar alarme</button>
+                <button id="alarm-cancel" class="button secondary" type="button" hidden>Cancelar edição</button>
+            </form>
+            <p class="alarm-help">Para registradores por código, informe os valores separados por vírgula. Para alarmes por bit, cadastre primeiro um sinal com o bit desejado e use valor 1.</p>
+            <div class="table-scroll"><table><thead><tr><th>Código / alarme</th><th>Máquina</th><th>Sinal e condição</th><th>Regra</th><th>Status</th><th>Ações</th></tr></thead><tbody id="alarm-list"></tbody></table></div>
+        </section>
+
+        <section class="config-section">
+            <div class="section-heading"><div><p class="eyebrow">CLP → PCM</p><h2>Sinais monitorados</h2><p class="section-description">Leia registers, coils e entradas da CLP selecionada.</p></div></div>
+            <form id="signal-form" class="config-grid">
+                <label>CLP<select id="signal-device" required></select></label>
+                <label>Nome<input id="signal-label" maxlength="100" placeholder="Parada da linha" required></label>
+                <label>Endereço PLC<input id="signal-plc-address" maxlength="40" placeholder="D10" required></label>
+                <label>Tipo<select id="signal-read-type"><option value="holding_register">Holding Register · FC03</option><option value="input_register">Input Register · FC04</option><option value="coil">Coil · FC01</option><option value="discrete_input">Entrada discreta · FC02</option></select></label>
+                <label>Endereço Modbus<input id="signal-address" type="number" min="0" max="65535" placeholder="10" required></label>
+                <label id="signal-bit-field">Bit (opcional)<input id="signal-bit" type="number" min="0" max="15" placeholder="Vazio = register inteiro"></label>
+                <label id="signal-trigger-field">Valor exato que ativa<input id="signal-trigger-value" type="number" min="0" max="65535" value="1" title="Usado para registrador inteiro, sem bit"></label>
+                <label>Polling (ms)<input id="signal-polling" type="number" min="50" max="60000" value="200" required></label>
+                <label>Gravidade<select id="signal-severity"><option value="info">Informação</option><option value="warning">Atenção</option><option value="critical">Crítica</option></select></label>
+                <label>Comportamento<select id="signal-behavior"><option value="warn">Somente informar</option><option value="pause_entry">Pausar novas entradas</option><option value="block_line">Bloquear fluxo da linha</option><option value="record_stop">Registrar parada no OEE</option></select></label>
+                <label>Ao ficar ativo<select id="signal-on-activate"><option value="none">Nenhuma ação</option><option value="line_started">Linha iniciou</option><option value="line_stopped">Linha parou</option><option value="ifts_start">IFTS · START da estação</option><option value="ifts_finish">IFTS · FINISH manual</option><option value="ifts_retry">IFTS · RETRY</option><option value="ifts_reset">IFTS · RESET de teste</option></select></label>
+                <label>Ao ficar inativo<select id="signal-on-deactivate"><option value="none">Nenhuma ação</option><option value="line_started">Linha iniciou</option><option value="line_stopped">Linha parou</option><option value="ifts_start">IFTS · START da estação</option><option value="ifts_finish">IFTS · FINISH manual</option><option value="ifts_retry">IFTS · RETRY</option><option value="ifts_reset">IFTS · RESET de teste</option></select></label>
+                <label id="reason-field" hidden>Motivo no OEE<select id="signal-downtime-reason"></select></label>
+                <label id="signal-active-value-field" class="check-field"><input id="signal-active-value" type="checkbox" checked> Ativo quando verdadeiro</label>
+                <label class="check-field"><input id="signal-enabled" type="checkbox" checked> Monitoramento ativo</label>
+                <label class="check-field"><input id="signal-aggregate-status" type="checkbox"> Participar do status agregado da linha</label>
+                <fieldset id="aggregate-status-config" class="line-status-config aggregate-status-config" hidden>
+                    <legend>Estados desta CLP na barra global</legend>
+                    <p>Pode ser combinado entre várias CLPs. Defina também o significado produtivo de cada valor para habilitar a consolidação física no OEE.</p>
+                    <div id="aggregate-status-mappings"></div>
+                    <button id="add-aggregate-status" class="button secondary" type="button">＋ Adicionar estado</button>
+                </fieldset>
+                <label class="check-field"><input id="signal-machine-status" type="checkbox"> Usar como status da máquina</label>
+                <fieldset id="machine-status-config" class="line-status-config machine-status-config" hidden>
+                    <legend>Estado exibido no cartão da máquina</legend>
+                    <p>Selecione a máquina IHM e associe cada valor recebido ao texto e à cor apresentados no cartão.</p>
+                    <label class="machine-status-target">Máquina IHM<select id="signal-status-machine"></select></label>
+                    <div id="machine-status-mappings"></div>
+                    <button id="add-machine-status" class="button secondary" type="button">＋ Adicionar estado</button>
+                </fieldset>
+                <button class="button success" type="submit">Cadastrar sinal</button>
+                <button id="signal-cancel" class="button secondary" type="button" hidden>Cancelar edição</button>
+            </form>
+            <div class="table-scroll"><table><thead><tr><th>Sinal</th><th>CLP</th><th>Leitura</th><th>Estado atual</th><th>Regra</th><th>Ações</th></tr></thead><tbody id="signal-list"></tbody></table></div>
+        </section>
+
+        <section class="config-section">
+            <div class="section-heading"><div><p class="eyebrow">PCM → CLP</p><h2>Comandos operacionais</h2><p class="section-description">A confirmação por sinal da CLP é opcional. Sem ACK, o sistema registra somente o resultado da tentativa de escrita.</p></div></div>
+            <form id="command-form" class="config-grid">
+                <label>CLP<select id="command-device" required></select></label>
+                <fieldset class="command-replica-config"><legend>Replicar para outras CLPs</legend><p>A mesma função, endereço e valor serão enviados para as CLPs selecionadas. Uma CLP offline gerará aviso e não impedirá as demais. O ACK, quando configurado, confirma somente a CLP principal.</p><div id="command-replica-devices"></div></fieldset>
+                <label>Código lógico<input id="command-code" maxlength="80" placeholder="LINE_START" pattern="[A-Za-z][A-Za-z0-9_]{2,79}" required></label>
+                <label>Nome<input id="command-label" maxlength="100" placeholder="Solicitar pausa" required></label>
+                <label>Destino<select id="command-scope"><option value="line">Linha</option><option value="machine">Máquina</option></select></label>
+                <label id="command-machine-field" hidden>Máquina<select id="command-machine"></select></label>
+                <label>Endereço PLC<input id="command-plc-address" maxlength="40" placeholder="M200" required></label>
+                <label>Tipo<select id="command-type"><option value="coil">Coil · FC05</option><option value="holding_register">Holding Register · FC16</option></select></label>
+                <label>Endereço Modbus<input id="command-address" type="number" min="0" max="65535" required></label>
+                <label>Valor<input id="command-value" type="number" min="0" max="65535" value="1" required></label>
+                <label>Acionamento<select id="command-mode"><option value="pulse">Pulso</option><option value="maintained">Mantido</option></select></label>
+                <label class="command-pulse-field">Pulso (ms, mín. 600)<input id="command-pulse" type="number" min="600" max="10000" value="600"></label>
+                <label class="command-pulse-field">Valor de retorno<input id="command-reset-value" type="number" min="0" max="65535" value="0"></label>
+                <label>Confirmação da CLP<select id="command-ack"></select></label>
+                <label>Timeout ACK (ms)<input id="command-timeout" type="number" min="100" max="60000" value="5000" required></label>
+                <label>Ordem<input id="command-order" type="number" min="0" max="9999" value="0" required></label>
+                <label>Regra de negócio<select id="command-business-action"><option value="plc_only">Somente CLP + auditoria</option></select></label>
+                <label class="check-field"><input id="command-visible" type="checkbox" checked> Disponibilizar nas telas operacionais</label>
+                <label class="check-field"><input id="command-enabled" type="checkbox" checked> Comando ativo</label>
+                <fieldset class="interlock-config"><legend>Intertravamentos</legend><p>Marque o sinal para ativar sua regra. Campos desmarcados não participam do comando.</p><div id="command-interlocks"></div></fieldset>
+                <button class="button success" type="submit">Cadastrar comando</button>
+                <button id="command-cancel" class="button secondary" type="button" hidden>Cancelar edição</button>
+            </form>
+            <div class="table-scroll"><table><thead><tr><th>Código / comando</th><th>Destino</th><th>CLP</th><th>Escrita</th><th>Confirmação</th><th>Ações</th></tr></thead><tbody id="command-list"></tbody></table></div>
+        </section>
+    </div>
+</main>
+<footer class="bottom-nav" data-navigation></footer>
+</body>
+</html>

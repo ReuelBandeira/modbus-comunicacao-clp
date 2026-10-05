@@ -1,0 +1,24 @@
+.shifts-main { overflow: auto; }
+.shifts-login { width: min(520px,100%); margin: auto; padding: 18px; background: var(--panel); border: 2px solid var(--line); box-shadow: var(--panel-shadow); }
+.shifts-login .section-heading, .shift-editor .section-heading, .shift-list-panel .section-heading { margin: -18px -18px 18px; }
+.shifts-form { display: grid; gap: 15px; }
+.shifts-layout { display: grid; grid-template-columns: minmax(320px,.75fr) minmax(560px,1.25fr); gap: 20px; min-height: 0; }
+.shift-editor, .shift-list-panel { min-width: 0; margin: 0; padding: 18px; background: var(--panel); border: 2px solid var(--line); box-shadow: var(--panel-shadow); }
+.shift-list-panel { display: flex; flex-direction: column; min-height: 0; }
+.shift-list-panel .table-scroll { flex: 1; min-height: 260px; border: 1px solid #999; background: #fff; }
+.shift-list-panel thead { position: sticky; top: 0; z-index: 1; }
+.shift-list-panel td:last-child, .shift-list-panel th:last-child { width: 300px; text-align: right; }
+.shift-list-panel .button { min-height: 38px; padding: 6px 12px; font-size: 13px; }
+.shift-actions { display: flex; justify-content: flex-end; gap: 6px; }
+.time-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.status-field { display: flex; align-items: center; gap: 9px; padding: 10px; border: 1px solid #999; background: #fff; }
+.status-field input { width: 20px; height: 20px; margin: 0; }
+.status-badge { display: inline-block; min-width: 70px; padding: 4px 8px; border: 1px solid #777; text-align: center; font-size: 12px; font-weight: bold; }
+.status-badge.active { border-color: #3b9947; background: #daeedf; color: #226533; }
+.status-badge.inactive { background: #e1e1e1; color: #555; }
+.compact-button { min-height: 40px; padding: 7px 12px; font-size: 13px; }
+.shifts-form .form-footer { justify-content: flex-end; }
+.shifts-form .form-footer #cancel-edit { margin-right: auto; }
+#shift-message { flex: 0 0 auto; }
+@media(max-width:950px) { .shifts-layout { grid-template-columns: 1fr; } }
+@media(max-width:480px) { .time-fields { grid-template-columns: 1fr; } }

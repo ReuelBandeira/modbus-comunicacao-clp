@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Comunicação Node ↔ CLP</title>
+    <link rel="stylesheet" href="communication.css">
+    <script src="communication.js" defer></script>
+</head>
+<body>
+    <header>
+        <div><p>DIAGNÓSTICO MODBUS TCP</p><h1>Comunicação Node ↔ CLP</h1></div>
+        <div class="connection"><span id="connection-dot" class="dot"></span><span id="connection-status">Conectando…</span></div>
+    </header>
+    <main>
+        <div class="toolbar">
+            <label>Máquina<select id="machine-filter"><option value="">Todas</option></select></label>
+            <button id="pause" type="button">Pausar</button>
+            <button id="clear" type="button">Limpar tela</button>
+            <span id="record-status" role="status">Aguardando registros.</span>
+        </div>
+        <div id="communication-log" class="communication-log" aria-live="polite"></div>
+        <footer>
+            <span><i class="direction plc"></i>CLP → Node</span>
+            <span><i class="direction node"></i>Node → CLP</span>
+            <span><i class="direction system"></i>Sistema</span>
+        </footer>
+    </main>
+</body>
+</html>

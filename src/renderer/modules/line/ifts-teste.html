@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Teste IFTS</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/ihm.css">
+    <link rel="stylesheet" href="line.css">
+    <link rel="stylesheet" href="ifts-teste.css">
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="ifts-teste.js" defer></script>
+    <script src="../../js/navigation.js" defer></script>
+</head>
+<body>
+    <header class="top-bar">
+        <h1 class="screen-title">PCM - TESTE DA INTEGRAÇÃO IFTS</h1>
+        <div class="connection"><span id="connection-dot" class="dot"></span><span id="connection-status">Acesso ADMIN necessário</span></div>
+    </header>
+    <main class="ifts-main">
+        <p id="message" class="notice" role="status" aria-live="assertive" hidden></p>
+
+        <section id="login-panel" class="panel login-panel">
+            <div class="section-heading"><div><p class="eyebrow">ACESSO RESTRITO</p><h2>Autenticação ADMIN</h2></div></div>
+            <form id="login-form" class="login-form">
+                <label>Senha ADMIN<input id="admin-password" type="password" maxlength="200" autocomplete="current-password" required autofocus></label>
+                <button class="button primary" type="submit">Entrar</button>
+            </form>
+        </section>
+
+        <div id="test-content" class="test-content" hidden>
+            <section class="panel bridge-panel">
+                <div class="section-heading"><div><p class="eyebrow">CONEXÃO</p><h2>IFTS CSV Bridge</h2></div><span id="bridge-badge" class="state-badge neutral">CONSULTANDO</span></div>
+                <div class="status-grid">
+                    <article><span>Disponibilidade</span><strong id="bridge-online">—</strong></article>
+                    <article><span>Estado</span><strong id="bridge-status">—</strong></article>
+                    <article><span>Modelo</span><strong id="bridge-model">—</strong></article>
+                    <article><span>cycleId no Bridge</span><strong id="bridge-cycle">—</strong></article>
+                </div>
+                <form id="model-form" class="model-form">
+                    <label>Modelo para o próximo teste<input id="model-input" maxlength="120" placeholder="SAMSUNG_A16" required></label>
+                    <button id="model-button" class="button secondary" type="submit">ALTERAR MODELO</button>
+                    <small>Disponível somente sem ciclo ativo. O executável do IFTS pode precisar ser reiniciado.</small>
+                </form>
+            </section>
+
+            <section class="panel cycle-panel">
+                <div class="section-heading"><div><p class="eyebrow">SIMULAÇÃO DO CLP</p><h2>Controle do ciclo</h2></div><button id="new-cycle" class="button secondary compact" type="button">GERAR NOVO ID</button></div>
+                <label class="cycle-field">Identificador único do ciclo<input id="cycle-id" maxlength="200" autocomplete="off"></label>
+                <section class="plc-io-monitor" aria-label="Monitor de sinais da CLP">
+                    <article id="m23-card" class="plc-io-card idle">
+                        <span id="m23-lamp" class="io-lamp" aria-hidden="true"></span>
+                        <div><small>CLP → PCM · FC01 · M23</small><strong id="m23-state">AGUARDANDO SINAL</strong><em id="m23-detail">Nenhum START recebido</em></div>
+                    </article>
+                    <article id="m4-card" class="plc-io-card idle">
+                        <span id="m4-lamp" class="io-lamp" aria-hidden="true"></span>
+                        <div><small>PCM → CLP · FC05 · M24</small><strong id="m4-state">AGUARDANDO FIM DO TESTE</strong><em id="m4-detail">Nenhum pulso enviado</em></div>
+                    </article>
+                </section>
+                <div class="flow-steps" aria-label="Etapas do teste">
+                    <article id="step-start"><span>1</span><strong>START</strong><small>Abre o ciclo no Bridge</small></article>
+                    <article id="step-test"><span>2</span><strong>TESTE IFTS</strong><small>Equipamento gera o CSV</small></article>
+                    <article id="step-finish"><span>3</span><strong>FINISH</strong><small>Bridge entrega o resultado</small></article>
+                    <article id="step-result"><span>4</span><strong>RESULTADO</strong><small>Confirmado no MongoDB</small></article>
+                </div>
+                <div class="cycle-actions">
+                    <button id="start-cycle" class="button success" type="button">1 · ENVIAR START</button>
+                    <button id="finish-cycle" class="button primary" type="button">2 · ENVIAR FINISH</button>
+                    <button id="retry-cycle" class="button warning" type="button">TENTAR NOVAMENTE</button>
+                    <button id="check-result" class="button secondary" type="button">CONSULTAR RESULTADO</button>
+                    <button id="debug-reset" class="button danger" type="button">RESET DEBUG DO BRIDGE</button>
+                </div>
+                <p class="plc-test-hint"><strong>Modo CLP:</strong> depois que o resultado for confirmado no MongoDB, <code>IFTS_RESULT_PASS</code> ou <code>IFTS_RESULT_FAIL</code> pulsa M24 para informar que o teste terminou. A passagem somente termina após o QR de saída em D21–D35.</p>
+                <p id="operation-detail" class="operation-detail">Gere um cycleId e envie START para iniciar o teste.</p>
+            </section>
+
+            <section class="panel result-panel">
+                <div class="section-heading"><div><p class="eyebrow">RETORNO PARA A IHM</p><h2>Resultado persistido</h2></div></div>
+                <div id="result-empty" class="empty"><strong>Nenhum resultado confirmado</strong><span>Após o FINISH, o Bridge enviará o JSON para POST /api/test-results.</span></div>
+                <div id="result-content" hidden>
+                    <div class="result-summary"><strong id="result-status" class="result-badge"></strong><span id="result-cycle"></span><span id="result-model"></span><span id="result-count"></span><span id="result-received"></span></div>
+                    <h3>Posições reprovadas</h3>
+                    <div class="table-scroll"><table><thead><tr><th>Posição</th><th>Resultado</th><th>Julgamento</th><th>NG Step</th><th>Mensagem</th></tr></thead><tbody id="result-failures"></tbody></table></div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer class="bottom-nav" data-navigation aria-label="Navegação principal"></footer>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Registro operacional</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/ihm.css">
+    <link rel="stylesheet" href="line.css">
+    <link rel="stylesheet" href="logs-operacionais.css">
+    <script src="logs-operacionais.js" defer></script>
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="../../js/navigation.js" defer></script>
+</head>
+<body class="operational-log-page">
+    <header class="top-bar">
+        <h1 class="screen-title">PCM - REGISTRO OPERACIONAL</h1>
+        <div class="connection"><span id="connection-dot" class="dot"></span><span id="sync-status" role="status">Acesso ADMIN necessário</span></div>
+    </header>
+    <main class="operational-log-main">
+        <section id="login-panel" class="panel log-login">
+            <div class="section-heading"><div><p class="eyebrow">ACESSO RESTRITO</p><h2>Consultar auditoria operacional</h2></div></div>
+            <p class="muted">O registro contém ações executadas, responsáveis, horário e resultado.</p>
+            <form id="login-form" class="login-form">
+                <label>Senha ADMIN<input id="admin-password" type="password" maxlength="200" autocomplete="current-password" required autofocus></label>
+                <button class="button primary" type="submit">ENTRAR</button>
+            </form>
+            <div id="login-message" class="notice error" role="alert" hidden></div>
+        </section>
+
+        <section id="logs-panel" hidden>
+            <div class="log-toolbar">
+                <div><p class="eyebrow">AUDITORIA</p><h2>Ações do sistema</h2><p id="retention-status" class="muted"></p></div>
+                <div class="toolbar-buttons"><button id="export-csv" class="button secondary" type="button">EXPORTAR CSV</button>
+                    <button id="logout" class="button secondary" type="button">SAIR DO ADMIN</button></div>
+            </div>
+            <div id="log-message" class="notice" role="status" aria-live="polite" hidden></div>
+            <form id="filter-form" class="panel filter-form">
+                <label>De<input id="filter-from" type="datetime-local" required></label>
+                <label>Até<input id="filter-to" type="datetime-local" required></label>
+                <label>Categoria<select id="filter-category">
+                    <option value="">Todas</option><option value="authentication">Autenticação</option>
+                    <option value="production">Produção</option><option value="operators">Operadores</option>
+                    <option value="shifts">Turnos</option><option value="oee">OEE e paradas</option>
+                    <option value="plc">CLP</option><option value="configuration">Configuração</option>
+                    <option value="integration">Integrações</option><option value="system">Sistema</option>
+                </select></label>
+                <label>Resultado<select id="filter-outcome"><option value="">Todos</option><option value="success">Sucesso</option><option value="failure">Falha</option></select></label>
+                <label>Responsável<input id="filter-actor" maxlength="100" placeholder="ADMIN, matrícula ou IHM"></label>
+                <label>Buscar<input id="filter-search" maxlength="100" placeholder="Ação, descrição ou recurso"></label>
+                <button class="button primary" type="submit">CONSULTAR</button>
+            </form>
+            <section class="log-summary" aria-label="Resumo do período">
+                <article><span>Registros</span><strong id="summary-total">0</strong></article>
+                <article><span>Sucessos</span><strong id="summary-success">0</strong></article>
+                <article><span>Falhas</span><strong id="summary-failure">0</strong></article>
+                <article><span>Último evento</span><strong id="summary-last">—</strong></article>
+            </section>
+            <section class="panel log-results">
+                <div class="table-scroll"><table><thead><tr><th>Data e hora</th><th>Categoria</th><th>Ação</th><th>Responsável</th><th>Resultado</th><th>Detalhes</th></tr></thead>
+                    <tbody id="log-list"><tr><td colspan="6" class="table-empty">Informe os filtros para consultar.</td></tr></tbody></table></div>
+            </section>
+        </section>
+    </main>
+    <footer class="bottom-nav" data-navigation aria-label="Navegação principal"></footer>
+</body>
+</html>

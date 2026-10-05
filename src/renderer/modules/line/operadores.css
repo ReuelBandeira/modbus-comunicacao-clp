@@ -1,0 +1,23 @@
+.operators-main { overflow: auto; }
+.operators-login { width: min(520px,100%); margin: auto; padding: 18px; background: var(--panel); border: 2px solid var(--line); box-shadow: var(--panel-shadow); }
+.operators-login .section-heading, .operator-editor .section-heading, .operator-list-panel .section-heading { margin: -18px -18px 18px; }
+.operators-form { display: grid; gap: 15px; }
+.operators-layout { display: grid; grid-template-columns: minmax(300px,.75fr) minmax(480px,1.25fr); gap: 20px; min-height: 0; }
+.operator-editor, .operator-list-panel { min-width: 0; margin: 0; padding: 18px; background: var(--panel); border: 2px solid var(--line); box-shadow: var(--panel-shadow); }
+.operator-list-panel { display: flex; flex-direction: column; min-height: 0; }
+.operator-list-panel .table-scroll { flex: 1; min-height: 260px; border: 1px solid #999; background: #fff; }
+.operator-list-panel thead { position: sticky; top: 0; z-index: 1; }
+.operator-list-panel td:last-child, .operator-list-panel th:last-child { width: 210px; text-align: right; }
+.operator-list-panel .button { min-height: 38px; padding: 6px 12px; font-size: 13px; }
+.operator-actions { display: flex; justify-content: flex-end; gap: 6px; }
+.compact-button { min-height: 40px; padding: 7px 12px; font-size: 13px; }
+.operators-form .form-footer { justify-content: flex-end; }
+.operators-form .form-footer #cancel-edit { margin-right: auto; }
+#operator-message { flex: 0 0 auto; }
+.staffing-config { margin-top: 22px; padding-top: 18px; border-top: 2px solid var(--line); }
+.staffing-config h3 { margin: 0; }
+.staffing-config .help { margin: 8px 0 14px; }
+.staffing-form { display: grid; grid-template-columns: minmax(140px,1fr) auto; align-items: end; gap: 10px; }
+.staffing-form .button { min-width: 190px; }
+@media(max-width:850px) { .operators-layout { grid-template-columns: 1fr; } }
+@media(max-width:520px) { .staffing-form { grid-template-columns: 1fr; } .staffing-form .button { width: 100%; } }

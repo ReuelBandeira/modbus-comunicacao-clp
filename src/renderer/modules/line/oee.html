@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · OEE</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/ihm.css">
+    <link rel="stylesheet" href="line.css">
+    <link rel="stylesheet" href="oee.css">
+    <script src="oee.js" defer></script>
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="../../js/navigation.js" defer></script>
+</head>
+<body class="oee-page">
+    <header class="top-bar">
+        <h1 class="screen-title">PCM - OEE</h1>
+        <div class="connection">
+            <span id="connection-dot" class="dot"></span>
+            <span id="sync-status" role="status">Carregando indicadores…</span>
+        </div>
+    </header>
+
+    <main class="oee-main">
+        <div id="oee-notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+        <section class="panel line-state-panel" aria-labelledby="line-state-title">
+            <div class="state-overview">
+                <p class="eyebrow" id="line-state-title">ESTADO PRODUTIVO DA LINHA</p>
+                <div class="state-line">
+                    <strong id="production-state" class="production-state unknown">CARREGANDO</strong>
+                    <span id="state-duration">—</span>
+                </div>
+                <p id="state-detail" class="muted">Consultando o apontamento atual.</p>
+                <p id="physical-state-detail" class="muted">Estado físico consolidado desabilitado.</p>
+            </div>
+            <div class="state-actions">
+                <button id="open-stop-dialog" class="button danger" type="button">REGISTRAR PARADA</button>
+                <button id="resume-line" class="button success" type="button" hidden>RETOMAR PRODUÇÃO</button>
+            </div>
+        </section>
+
+        <section class="panel report-filter" aria-labelledby="report-title">
+            <div class="filter-title">
+                <p class="eyebrow">PERÍODO DO RELATÓRIO</p>
+                <h2 id="report-title">Indicadores da linha</h2>
+            </div>
+            <label>Visualização
+                <select id="period-preset">
+                    <option value="current-shift" selected>Turno atual</option>
+                    <option value="today">Hoje</option>
+                    <option value="24h">Últimas 24 horas</option>
+                    <option value="custom">Personalizado</option>
+                </select>
+            </label>
+            <label>De<input id="oee-from" type="datetime-local" required></label>
+            <label>Até<input id="oee-to" type="datetime-local" required></label>
+            <label class="live-control"><input id="live-update" type="checkbox" checked> Tempo real</label>
+            <button id="apply-oee" class="button primary" type="button">APLICAR</button>
+        </section>
+
+        <section class="oee-dashboard" aria-label="Painel de indicadores OEE">
+            <article class="panel oee-hero">
+                <p class="eyebrow">OEE GERAL</p>
+                <strong id="oee-value">PENDENTE</strong>
+                <span id="oee-caption" class="pending-caption">Aguardando tempo de ciclo ideal</span>
+                <div class="component-pills" aria-label="Componentes do OEE">
+                    <div><span>Disponibilidade</span><strong id="availability-mini">—</strong></div>
+                    <div><span>Performance</span><strong id="performance-mini">—</strong></div>
+                    <div><span>Qualidade</span><strong id="quality-mini">—</strong></div>
+                </div>
+            </article>
+
+            <div class="dashboard-content">
+                <section class="production-kpis" aria-label="Resumo de produção">
+                    <article><span>Tempo parado</span><strong id="downtime">—</strong></article>
+                    <article><span>Chips produzidos</span><strong id="produced">—</strong></article>
+                    <article><span>Chips aprovados</span><strong id="approved">—</strong></article>
+                    <article><span>Refugos</span><strong id="rejected">—</strong></article>
+                </section>
+
+                <section class="panel component-panel" aria-label="Componentes do OEE">
+                    <div class="component-row availability-row">
+                        <span>Disponibilidade</span><div class="metric-track"><i id="availability-bar"></i></div><strong id="availability-value">—</strong>
+                    </div>
+                    <div id="performance-row" class="component-row pending-row">
+                        <span>Performance</span><div class="metric-track"><i id="performance-bar"></i></div><strong id="performance-value">PENDENTE</strong>
+                    </div>
+                    <div class="component-row quality-row">
+                        <span>Qualidade</span><div class="metric-track"><i id="quality-bar"></i></div><strong id="quality-value">—</strong>
+                    </div>
+                    <p id="component-help" class="component-help">Performance e OEE serão calculados quando o tempo de ciclo ideal da linha estiver definido.</p>
+                </section>
+            </div>
+        </section>
+
+        <section class="time-cards" aria-label="Tempos de disponibilidade">
+            <article><span>Tempo planejado</span><strong id="planned-time">—</strong></article>
+            <article><span>Tempo em operação</span><strong id="operating-time">—</strong></article>
+            <article><span>Indeterminados</span><strong id="indeterminate">—</strong></article>
+            <article><span>Atualização</span><strong id="live-status">TEMPO REAL</strong></article>
+        </section>
+
+        <section class="panel availability-waterfall-panel" aria-labelledby="waterfall-title">
+            <div class="waterfall-heading">
+                <div><p class="eyebrow">DISPONIBILIDADE</p><h2 id="waterfall-title">Cascata do tempo produtivo</h2></div>
+                <strong id="waterfall-equation">—</strong>
+            </div>
+            <div class="waterfall-legend" aria-hidden="true"><span class="scheduled">Tempo base</span><span class="excluded">Exclusão planejada</span>
+                <span class="downtime">Perda de disponibilidade</span><span class="operating">Tempo produtivo</span></div>
+            <div class="waterfall-scroll"><div id="availability-waterfall" class="availability-waterfall" role="img" aria-label="Carregando cascata de disponibilidade"></div></div>
+        </section>
+
+        <div class="oee-details">
+            <section class="panel">
+                <div class="section-heading"><div><p class="eyebrow">PARETO</p><h2>Paradas por motivo</h2></div></div>
+                <div class="table-scroll"><table><thead><tr><th>Motivo</th><th>Tipo</th><th>Ocorrências</th><th>Duração</th></tr></thead>
+                    <tbody id="reason-totals"></tbody></table></div>
+            </section>
+            <section class="panel">
+                <div class="section-heading"><div><p class="eyebrow">HISTÓRICO</p><h2>Eventos no período</h2></div></div>
+                <div class="table-scroll"><table><thead><tr><th>Início</th><th>Fim</th><th>Motivo</th><th>Origem</th></tr></thead>
+                    <tbody id="downtime-events"></tbody></table></div>
+            </section>
+        </div>
+        <p id="oee-updated" class="updated-at"></p>
+    </main>
+
+    <dialog id="stop-dialog" class="stop-dialog" aria-labelledby="stop-dialog-title">
+        <div class="dialog-heading stop-dialog-heading">
+            <div><p id="stop-dialog-eyebrow" class="eyebrow">APONTAMENTO MANUAL</p><h2 id="stop-dialog-title">Registrar parada da linha</h2></div>
+            <button id="close-stop-dialog" class="button secondary" type="button">VOLTAR AO OEE</button>
+        </div>
+        <div class="stop-dialog-body">
+            <section class="stop-context" aria-label="Estado da linha">
+                <span>Estado atual</span><strong id="dialog-line-state">—</strong>
+                <p id="dialog-state-detail">Confirme o motivo antes de interromper o apontamento produtivo.</p>
+            </section>
+            <form id="stop-form" class="stop-form">
+                <label>Motivo da parada
+                    <select id="stop-reason" required><option value="">Selecione…</option></select>
+                </label>
+                <label>Observação
+                    <textarea id="stop-notes" maxlength="500" rows="5" placeholder="Opcional"></textarea>
+                </label>
+                <label id="stop-admin-field" hidden>Senha ADMIN
+                    <input id="stop-admin-password" type="password" maxlength="200" autocomplete="current-password">
+                </label>
+                <div id="stop-warning" class="stop-warning">O registro começa imediatamente e permanece aberto até a ação “Retomar produção”.</div>
+                <button id="stop-submit" class="button danger" type="submit">CONFIRMAR PARADA</button>
+            </form>
+        </div>
+    </dialog>
+
+    <footer class="bottom-nav" data-navigation aria-label="Navegação principal"></footer>
+</body>
+</html>

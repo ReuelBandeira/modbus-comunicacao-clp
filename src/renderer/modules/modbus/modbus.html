@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Teste Modbus TCP</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/tcp.css">
+    <link rel="stylesheet" href="modbus.css">
+    <script src="modbus.js" defer></script>
+    <link rel="stylesheet" href="../../css/navigation.css">
+    <script src="../../js/navigation.js" defer></script>
+</head>
+
+<body>
+    <div class="tcp-layout">
+        <header class="top-bar">
+            <h1>PCM · TESTE CLP</h1><span>MODBUS TCP / ETHERNET</span>
+        </header>
+        <main class="main-content">
+            <aside class="side-panel">
+                <h2 class="section-title">CONEXÃO</h2>
+                <label>IP da CLP<input id="host" placeholder="192.168.0.10" required></label>
+                <label>Porta TCP<input id="port" type="number" value="502" min="1" max="65535"></label>
+                <button id="ping" class="btn btn-secondary machine-btn">PING</button>
+                <div class="status-box"><span class="info-label">STATUS</span>
+                    <p id="status" role="status">Aguardando teste</p>
+                </div>
+                <div class="connection-indicators" aria-live="polite">
+                    <span class="info-label">CONEXÃO TCP</span>
+                    <p id="connection-status" class="indicator" data-state="idle">NÃO CONFIGURADO</p>
+                    <span class="info-label">RESPOSTA DA CLP</span>
+                    <p id="plc-status" class="indicator" data-state="idle">AGUARDANDO ENVIO</p>
+                </div>
+            </aside>
+            <section class="machine-panel">
+                <h2 class="machine-header">ENVIO E RESPOSTA DA CLP</h2>
+
+                <label>Conteúdo do QR code (UTF-8)<textarea id="text" rows="2"
+                        maxlength="246">GH43-05254C+PL1L908GS+56809N</textarea></label>
+                <details class="advanced-settings">
+                    <summary>Configurações avançadas</summary>
+
+                    <fieldset class="connection-settings">
+                        <legend>Comunicação</legend>
+                        <label>Unit ID<input id="unitId" type="number" value="1" min="1" max="247"></label>
+                        <label>Timeout por operação (ms)<input id="timeout" type="number" value="3000" min="100"
+                                max="10000"></label>
+                    </fieldset>
+                    <div class="settings">
+                        <fieldset>
+                            <legend>Escrita · Holding registers (FC16)</legend>
+                            <label>Endereço inicial (base zero)<input id="writeAddress" type="number" value="0" min="0"
+                                    max="65535"></label>
+                            <label>Quantidade de registradores<input id="registerCount" type="number" value="32" min="1"
+                                    max="123"></label>
+                            <label>Ordem dos bytes<select id="byteOrder">
+                                    <option value="be">AB — byte alto primeiro</option>
+                                    <option value="le">BA — byte baixo primeiro</option>
+                                </select></label>
+                            <p>2 bytes por registrador. Completa o espaço restante com zeros.</p>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Resposta · Holding registers (FC03)</legend>
+                            <label>Endereço inicial (base zero)<input id="responseAddress" type="number" value="100"
+                                    min="0" max="65535"></label>
+                            <label>Quantidade de registradores<input id="responseCount" type="number" value="1" min="1"
+                                    max="125"></label>
+                            <label>Formato do OK<select id="responseMode">
+                                    <option value="number">Número no primeiro registrador</option>
+                                    <option value="text">Texto UTF-8 nos registradores</option>
+                                </select></label>
+                            <label>Valor esperado de OK<input id="expected" value="1" maxlength="250"></label>
+                            <label>Espera pelo OK (ms)<input id="responseTimeout" type="number" value="10000" min="100"
+                                    max="60000"></label>
+                        </fieldset>
+                    </div>
+                </details>
+                <div class="actions"><button id="read" class="btn btn-secondary">LER RESPOSTA</button><button id="send"
+                        class="btn btn-success">ENVIAR E AGUARDAR OK</button><button id="clear"
+                        class="btn btn-secondary">LIMPAR LOG</button></div>
+                <p class="hint">O envio escreve na CLP. Se o OK já estiver presente antes do envio, a escrita será
+                    bloqueada para evitar confirmação antiga.</p>
+                <div id="log" class="tcp-log" tabindex="0" aria-label="Registros Modbus"></div>
+            </section>
+            <section class="machine-panel polling-panel" aria-labelledby="polling-title">
+                <div class="polling-heading">
+                    <div><span class="info-label">MONITORAMENTO SEPARADO</span><h2 id="polling-title">POLLING DO CADASTRO DA MÁQUINA</h2></div>
+                    <div class="polling-controls"><label for="polling-machine">MÁQUINA<select id="polling-machine"></select></label>
+                    <div class="actions"><button id="polling-toggle" class="btn btn-success">INICIAR POLLING</button><button id="polling-reload" class="btn btn-secondary">RECARREGAR CADASTRO</button></div></div>
+                </div>
+                <p id="polling-config" class="polling-config">Carregando a configuração usada no CRUD de máquinas…</p>
+                <div class="signal-grid" aria-live="polite">
+                    <article><span>CONEXÃO MODBUS</span><strong id="polling-connection" data-value="unknown">PARADO</strong><small id="polling-endpoint">—</small></article>
+                    <article><span>REQUEST_QR</span><strong id="request-qr" data-value="unknown">—</strong><small id="request-address">Coil —</small></article>
+                    <article><span>CONFIRMAR SAÍDA</span><strong id="exit-confirmed" data-value="unknown">—</strong><small id="exit-address">Coil —</small></article>
+                    <article><span>MAILBOX OCUPADO</span><strong id="result-ready" data-value="unknown">—</strong><small id="result-address">Holding registers —</small></article>
+                    <article><span>CICLOS DE POLLING</span><strong id="polling-count">0</strong><small id="polling-last">Ainda não iniciado</small></article>
+                </div>
+                <div class="reading-panel">
+                    <div><span class="info-label">CONTEÚDO ATUAL DO MAILBOX</span><strong id="reading-state">Aguardando mailbox ocupado</strong></div>
+                    <dl id="result-data">
+                        <div><dt>Sequência</dt><dd id="result-sequence">—</dd></div><div><dt>Serial / QR</dt><dd id="result-value">—</dd></div>
+                        <div><dt>Qtd. posições</dt><dd id="result-error">—</dd></div><div><dt>Posições</dt><dd id="result-cycle">—</dd></div>
+                    </dl>
+                </div>
+                <div id="polling-log" class="tcp-log polling-log" tabindex="0" aria-label="Histórico do polling"></div>
+            </section>
+        </main>
+        <footer class="bottom-nav" data-navigation aria-label="Navega&#231;&#227;o principal"></footer>
+    </div>
+</body>
+
+</html>

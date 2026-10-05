@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM · Entrada de linha</title>
+    <link rel="stylesheet" href="../../vendor/bootstrap/bootstrap.min.css"><link rel="stylesheet" href="../../css/ihm.css"><link rel="stylesheet" href="line.css"><link rel="stylesheet" href="bipagem.css"><link rel="stylesheet" href="../../css/navigation.css">
+    <script src="bipagem.js" defer></script><script src="../../js/navigation.js" defer></script>
+</head>
+<body>
+<header class="top-bar"><h1 class="screen-title">PCM - ENTRADA DE LINHA</h1><div class="connection"><span id="connection-dot" class="dot"></span><span id="sync-status" role="status">Conectando…</span></div></header>
+<span id="line-state" hidden></span>
+<main>
+<section id="operation-gate" class="operation-gate" aria-labelledby="operation-gate-title">
+    <header><span>PRÉ-PARTIDA DA LINHA</span><h2 id="operation-gate-title">Preparar e iniciar operação</h2><p>A bipagem será liberada somente após todos os sistemas confirmarem disponibilidade.</p></header>
+    <div id="operation-checks" class="operation-checks" aria-live="polite"></div>
+    <p id="operation-message" class="operation-message" role="status" hidden></p>
+    <div class="operation-actions"><button id="operation-refresh" class="button secondary" type="button">VERIFICAR NOVAMENTE</button><button id="operation-start" class="button success" type="button" disabled>INICIAR OPERAÇÃO</button></div>
+</section>
+<section id="entry-shell" class="entry-shell" aria-labelledby="entry-title" hidden>
+    <header class="flow-heading"><div><span>FLUXO DA LINHA</span><h2 id="entry-title">Bipagem da bandeja e dos chips (1 a 20)</h2></div><div class="flow-status"><span class="entry-requirements"><strong id="staffing-status" class="staffing-status blocked">OPERADORES 0 / 3</strong><strong id="inspection-status" class="staffing-status blocked">INSPEÇÃO OFFLINE</strong></span><strong id="step-label">Passo 1 de 2</strong><span id="step-instruction">Bipe a bandeja para iniciar</span></div></header>
+    <div class="steps" aria-label="Etapas da preparação"><article id="step-tray" class="step active"><b>1</b><div><strong>Bipar a bandeja</strong><span>Escaneie o QR Code da bandeja para iniciar.</span></div></article><article id="step-chips" class="step"><b>2</b><div><strong>Bipar chips nas posições 1 a 20</strong><span>Escaneie os chips na ordem correta.</span></div></article></div>
+    <p id="scan-message" class="scan-message" data-tone="info" data-visible="false" role="status" aria-live="polite"></p>
+    <div class="workspace"><section class="scan-work">
+        <div class="tray-area"><article class="reader-card"><h3>1. BIPAR BANDEJA</h3><div class="reader-controls"><div class="reader-input"><input id="scan-display" readonly placeholder="Clique em Iniciar bipagem"><span aria-hidden="true">▦</span></div><button id="start-preparation" class="button primary" type="button">INICIAR BIPAGEM</button></div><div class="reader-guide"><img class="tray-icon" src="assets/tray-qr.svg" alt="Bandeja com QR Code"><p id="reader-help">Clique em Iniciar bipagem para habilitar a leitura da bandeja.</p></div></article>
+        <article class="tray-info"><h3>Informações da bandeja</h3><dl><div><dt>QR da bandeja:</dt><dd id="tray-code">—</dd></div><div><dt>ID da passagem:</dt><dd id="entry-id">—</dd></div><div><dt>Estação:</dt><dd id="station-name">—</dd></div><div><dt>Data/Hora:</dt><dd id="tray-time">—</dd></div><div><dt>Status:</dt><dd><span id="tray-status" class="status-tag neutral">AGUARDANDO</span></dd></div></dl></article></div>
+        <section class="chips-area"><div class="chips-heading"><div><h3>2. BIPAR CHIPS NAS POSIÇÕES (1 A 20)</h3><p>Escaneie os chips em ordem.</p></div><div class="recovery-actions"><button id="undo" class="button secondary" type="button" disabled>DESFAZER ÚLTIMO</button><button id="cancel" class="button danger" type="button" disabled>CANCELAR</button></div></div><div id="positions" class="positions" aria-label="Posições da bandeja"></div><p class="order-note">ⓘ Bipe os chips exatamente nesta ordem. A linha só será liberada após as 20 posições serem lidas.</p></section>
+    </section><aside class="summary-panel">
+        <section><h3>Progresso da bandeja</h3><div class="progress-line"><div class="progress-track"><span id="progress-bar"></span></div><strong id="progress-percent">0%</strong></div><b id="progress-count">0 / 20</b></section>
+        <section><h3>Última leitura</h3><dl class="last-read"><div><dt>Posição:</dt><dd id="last-position">—</dd></div><div><dt>Código do chip:</dt><dd id="last-chip">—</dd></div><div><dt>Horário:</dt><dd id="last-time">—</dd></div><div><dt>Status:</dt><dd id="last-status">—</dd></div></dl></section>
+        <section class="checklist"><h3>Status da bandeja</h3><div><i id="check-tray"></i><span>Bandeja lida</span><b id="tag-tray">PENDENTE</b></div><div><i id="check-chips"></i><span>20 posições lidas</span><b id="tag-chips">PENDENTE</b></div><div hidden><i id="check-release"></i><span>Liberada para a linha</span><b id="tag-release">PENDENTE</b></div></section>
+        <button id="release" class="button release" type="button" disabled>FINALIZAR E LIBERAR BANDEJA<small>Somente ao completar as 20 posições</small></button>
+    </aside></div><input id="scanner-capture" class="scanner-capture" autocomplete="off" inputmode="none" tabindex="-1">
+</section></main><footer class="bottom-nav" data-navigation aria-label="Navegação principal"></footer>
+</body></html>

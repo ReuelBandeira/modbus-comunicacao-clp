@@ -1,0 +1,31 @@
+.operational-log-main { padding: 1.25rem; padding-bottom: 7rem; overflow: auto; }
+.log-login { width: min(100%, 560px); margin: 3rem auto; padding: 1rem; background: var(--panel); border: 2px solid var(--line); box-shadow: var(--panel-shadow); }
+.login-form { display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: end; }
+.login-form label, .filter-form label { display: grid; gap: .35rem; font-weight: 700; }
+.log-toolbar { display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 1rem; }
+.log-toolbar h2 { margin: 0; }
+.toolbar-buttons { display: flex; flex-wrap: wrap; gap: .65rem; }
+.filter-form { display: grid; grid-template-columns: repeat(6, minmax(145px, 1fr)) auto; gap: .75rem; align-items: end; margin-bottom: 1rem; padding: 1rem; background: var(--panel); border: 2px solid var(--line); box-shadow: var(--panel-shadow); }
+.log-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; margin-bottom: 1rem; }
+.log-summary article { padding: 1rem; border-radius: 12px; background: var(--panel, #fff); border: 1px solid rgba(255,255,255,.12); display: grid; gap: .35rem; }
+.log-summary span { color: var(--muted, #8fa0aa); font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; }
+.log-summary strong { font-size: 1.35rem; }
+.log-results { padding: 0; overflow: hidden; }
+.log-results table { width: 100%; }
+.log-results th, .log-results td { vertical-align: top; }
+.log-action { display: grid; gap: .2rem; min-width: 180px; }
+.log-action code { font-size: .72rem; color: var(--muted, #8fa0aa); }
+.log-description { max-width: 430px; white-space: normal; }
+.outcome-badge, .category-badge { display: inline-flex; align-items: center; border-radius: 999px; padding: .25rem .55rem; font-size: .72rem; font-weight: 800; white-space: nowrap; }
+.outcome-badge.success { color: #7ef5bb; background: rgba(28, 163, 98, .15); }
+.outcome-badge.failure { color: #ff9a9a; background: rgba(210, 55, 55, .16); }
+.category-badge { color: #a8d8ff; background: rgba(42, 121, 180, .16); }
+.log-details summary { cursor: pointer; font-weight: 700; }
+.log-details dl { display: grid; grid-template-columns: auto 1fr; gap: .25rem .6rem; margin: .5rem 0 0; font-size: .78rem; }
+.log-details dt { color: var(--muted, #8fa0aa); }
+.log-details dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 1200px) { .filter-form { grid-template-columns: repeat(3, minmax(160px, 1fr)); } }
+@media (max-width: 720px) {
+    .log-toolbar, .login-form { grid-template-columns: 1fr; display: grid; }
+    .filter-form, .log-summary { grid-template-columns: 1fr 1fr; }
+}

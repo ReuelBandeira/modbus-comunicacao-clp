@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM - Carregando</title>
+    <link rel="stylesheet" href="renderer/css/app.css">
+    <script src="renderer/js/loading.js" defer></script>
+</head>
+<body class="loading-page">
+    <main class="loading-panel" aria-labelledby="loading-title">
+        <span class="loading-brand">PCM · IHM</span>
+        <section id="loading-state">
+            <h1 id="loading-title">Iniciando o sistema</h1>
+            <div class="loading-spinner" aria-hidden="true"></div>
+            <p role="status">Carregando a área deste computador…</p>
+        </section>
+        <form id="station-setup" class="station-setup" hidden>
+            <div class="setup-heading">
+                <span>CONFIGURAÇÃO LOCAL</span>
+                <h1>Estação</h1>
+            </div>
+            <label>Selecione o tipo de estação
+                <select id="station-role" required>
+                    <option value="main">Principal</option>
+                    <option value="end-of-line">Final de Linha</option>
+                </select>
+            </label>
+            <label id="server-field">Endereço do computador Principal
+                <input id="server-url" type="url" placeholder="http://192.168.0.10:3000" autocomplete="url">
+                <small>Use o IP fixo e a porta da API no computador Principal.</small>
+            </label>
+            <label>Senha de configuração
+                <input id="setup-password" type="password" autocomplete="current-password" required>
+            </label>
+            <p id="setup-error" class="setup-error" role="alert" hidden></p>
+            <div class="setup-actions">
+                <button id="setup-close" type="button">Fechar aplicativo</button>
+                <button id="setup-cancel" type="button" hidden>Cancelar</button>
+                <button id="setup-submit" type="submit">Salvar e iniciar</button>
+            </div>
+        </form>
+        <noscript>Ative o JavaScript para abrir o sistema.</noscript>
+    </main>
+</body>
+</html>
